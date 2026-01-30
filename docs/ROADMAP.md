@@ -1,101 +1,59 @@
-**Priority: Build this FIRST.**
+# Future Infrastructure Roadmap
 
-#### 2. Audit Trail (Compliance Requirement)
-**What you have:** Nothing
-**What you need:** Immutable, structured execution log
-
-**Why it matters:**
-*   SOC2/ISO27001/GDPR require audit trails
-*   "Why did the agent do this?" is the #1 enterprise question
-*   Legal liability requires proof of governance
-
-**Priority: Build this SECOND.**
-
-#### 3. Observability & Metrics
-**What you have:** Nothing visible
-**What you need:** Real-time metrics emission + dashboard
-
-**Why it matters:**
-*   "Black box halt" kills trust
-*   Operators need to see WHY halts happen
-*   Cost tracking is a must-have
-
-**Priority: Build this THIRD.**
+This roadmap focuses on transforming the **Governance Engine** into a non-bypassable, enterprise-ready infrastructure layer.
 
 ---
 
-### Tier 2: IMPORTANT (Enterprise Nice-to-Haves)
+## 🛠️ Tier 1: Critical (Non-Bypassable Safety)
 
-#### 4. Policy Integration Layer
-**What you have:** Hard-coded budgets
-**What you need:** Pluggable policy engine
+### 1. HTTP Proxy Enforcer
+**Objective:** Move enforcement from the agent's process to the network boundary.
+- [ ] Implement an HTTP Transparent Proxy for outgoing tool calls.
+- [ ] Intercept at the network level: if governance says HALT, the proxy returns `403 Forbidden`.
+- [ ] Prevents "clever" agents from bypassing in-process decorators.
 
-**Why it matters:**
-*   Every company has different risk tolerance
-*   Compliance requirements vary (GDPR vs HIPAA vs SOC2)
+### 2. Immutable Audit Persistence
+**Objective:** Transition from in-memory traces to legally admissible records.
+- [ ] **Hash Chaining**: Cryptographically link audit entries so history cannot be modified post-mortem.
+- [ ] **S3 Root-of-Trust**: Automatically export signed logs to secure, immutable buckets.
+- [ ] **Audit Replay Tool**: A CLI to reconstruct execution from hashes for regulatory review.
 
-**Priority: Build this FOURTH.**
-
-#### 5. Safety Guardrails
-**What you have:** Risk budget (abstract)
-**What you need:** Concrete attack detection (Prompt Injection, PII Leakage)
-
-**Priority: Build this FIFTH.**
-
-#### 6. Multi-Agent Coordination
-**What you have:** Single-agent governance
-**What you need:** System-level governance (Shared Budget Pools, Cascade Detection)
-
-**Priority: Build this SIXTH.**
+### 3. Safe-Kernel Contract
+**Objective:** Ensure the system cannot be misconfigured.
+- [ ] **Mandatory Extraction**: Modify the kernel so it rejects raw signals and only accepts inputs from validated `SignalExtractor` instances.
 
 ---
 
-### Tier 3: NICE-TO-HAVE
+## 📊 Tier 2: Operational (Enterprise Observability)
 
-7.  **Drift & Accuracy Monitoring**
-8.  **Auto-Signal Extraction**
-9.  **Cloud-Managed Service**
+### 4. Metrics & Dashboards
+**Objective:** Give SREs and Ops teams real-time visibility.
+- [ ] **Prometheus Exporter**: Emit budget drain rates, step counts, and halt reasons.
+- [ ] **Grafana Templates**: Pre-built dashboards for "Governance Health."
+
+### 5. Policy Configuration Layer
+**Objective:** Allow non-developers to define business rules.
+- [ ] **YAML Policy Engine**: Load constraints like "No write actions after 3 failures" from config files.
+- [ ] **Validator**: Check for conflicting policies before agent execution.
 
 ---
 
-## The Build Priority (What to Ship When)
+## 🐝 Tier 3: Scalability (Multi-Agent Swarms)
 
-### Month 1: Foundation (Make It Real)
-**Goal:** Prove it works in production, not just demos
+### 6. Shared Budget Pools
+**Objective:** Govern agent swarms as a single unit.
+- [ ] Allow multiple agents to draw from a shared `Effort` or `Risk` budget.
+- [ ] Implement `SystemGovernor` for cross-process coordination.
 
-**Week 1-2: Enforcement Boundary**
-*   [ ] HTTP proxy that intercepts tool calls
-*   [ ] Python middleware for LangChain/AutoGen
-*   [ ] Prove agent CANNOT bypass harness
+### 7. Cascade Prevention
+**Objective:** Stop failure "contagion" between interacting agents.
+- [ ] Detect when one agent's halt should trigger a preventative halt in its neighbor.
 
-**Week 3-4: Audit Trail**
-*   [ ] Structured logging to PostgreSQL
-*   [ ] Query API for "show me execution history"
-*   [ ] Export to S3 for compliance
+---
 
-### Month 2: Enterprise Features (Make It Sellable)
-**Goal:** Enable enterprise sales conversations
+## 📜 Regulatory Certification Toolkit
+- [ ] **Compliance Report Generator**: Automatically summarize audit trails for ISO/EU AI Act filing.
+- [ ] **Harness Stress-Testing Suite**: Tools to prove the harness stops random/adversarial actors.
 
-**Week 5-6: Observability**
-*   [ ] Prometheus metrics emission
-*   [ ] Pre-built Grafana dashboards
-*   [ ] Cost tracking per agent
-
-**Week 7-8: Policy Engine + Guardrails**
-*   [ ] Pluggable policy system
-*   [ ] Prompt injection detector
-*   [ ] PII leakage detector
-*   [ ] Tool authorization
-
-### Month 3: Platform Play (Make It Infrastructure)
-**Goal:** Become the default governance layer
-
-**Week 9-10: Multi-Agent Coordination**
-*   [ ] Shared budget pools
-*   [ ] Cascade detection
-*   [ ] System-level halts
-
-**Week 11-12: Native Integrations**
-*   [ ] LangChain official plugin
-*   [ ] AutoGen official middleware
-*   [ ] StackAI/Vellum partnerships
+---
+*Status: Core Engine (v0.7.0) is stable. The above items represent the hardening path to v1.0.*
