@@ -1,35 +1,3 @@
-# The Full Agent Harness Infrastructure (Roadmap)
-
-## Current State: What Governance Engine Already Has
-
-✅ **Governance Core Engine**
-*   Multi-dimensional budgets (effort, persistence, risk, exploration)
-*   Deterministic halt logic
-*   Typed failure modes (EXHAUSTION, STAGNATION, OVERRISK, SAFETY, EXTERNAL)
-*   Model-agnostic design
-*   31+ tests proving it works
-
-**This is 20% of what you need. The engine works. The rest is missing.**
-
----
-
-## What's Missing: The 80% Gap to Infrastructure
-
-### Tier 1: CRITICAL (Without These, No Enterprise Adoption)
-
-#### 1. Enforcement Boundary (The Killer Feature)
-**What you have:** In-process library (agent can bypass)
-**What you need:** Sidecar/proxy that physically blocks execution
-
-**Why it matters:**
-*   Current: Agent calls `harness.can_continue()` → agent can ignore it
-*   Required: Harness intercepts tool calls → agent CANNOT bypass
-
-**Architecture options:**
-1.  **HTTP Proxy** (easiest, production-grade)
-2.  **Python Middleware** (framework-specific)
-3.  **Container Sidecar** (cloud-native)
-
 **Priority: Build this FIRST.**
 
 #### 2. Audit Trail (Compliance Requirement)
