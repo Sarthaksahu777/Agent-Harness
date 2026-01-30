@@ -155,4 +155,87 @@ search_web("AI Governance")
 
 The engine generates an immutable audit trail. See [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md) for the full mapping of features to the 15-point regulatory checklist.
 
-*Stable Release v0.7.0 | agentharnessengine*
+---
+
+## V1 Hardening Features
+
+Version 1.0 introduces enterprise-grade hardening for production deployments:
+
+### 🔒 Proxy Enforcement Layer
+
+Network-level enforcement that intercepts all tool calls:
+
+```bash
+# Start the proxy server
+uvicorn governance.proxy_enforcer:app --host 0.0.0.0 --port 8000
+```
+
+All tool calls must pass through the proxy:
+```bash
+curl -X POST http://localhost:8000/tool/my_action \
+  -H "Content-Type: application/json" \
+  -d '{"params": {"key": "value"}, "signals": {"reward": 0.5}}'
+```
+
+### 🔗 Immutable Audit with Hash Chaining
+
+Tamper-evident audit trails with SHA256 hash chaining:
+
+```python
+from governance.audit import HashChainedAuditLogger
+
+logger = HashChainedAuditLogger(filepath="audit_chain.jsonl")
+logger.log(step=1, action="my_action", params={}, signals={}, result=result)
+
+# Verify chain integrity
+python -m governance.audit verify audit_chain.jsonl
+```
+
+### 📊 Prometheus Metrics & Grafana Dashboard
+
+Real-time observability for SRE teams:
+
+```bash
+# Scrape metrics
+curl http://localhost:8000/metrics
+```
+
+Import `dashboards/agent_harness_v1.json` into Grafana for pre-built panels.
+
+### ⚖️ Safe-Kernel Contracts
+
+Runtime invariant checking (enable with env var):
+
+```bash
+export GOVERNANCE_CONTRACTS_ENABLED=1
+```
+
+Contracts enforce:
+- Budget values never increase spontaneously
+- Halt is terminal (irreversible without reset)
+- Kernel never executes actions directly
+
+### ⚙️ Policy Configuration
+
+External YAML configuration for governance parameters:
+
+```yaml
+# config/policies.yaml
+limits:
+  max_steps: 100
+  max_risk: 0.8
+stagnation:
+  window: 10
+  effort_floor: 0.1
+```
+
+Load policies:
+```python
+from governance.policy_loader import load_policy_profile
+profile = load_policy_profile("config/policies.yaml")
+kernel = GovernanceKernel(profile)
+```
+
+---
+
+*Stable Release v1.0.0 | agentharnessengine*

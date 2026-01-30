@@ -5,28 +5,38 @@ Governance Metrics: Observability layer for the Governance Kernel.
 This module provides:
 - GovernanceMetrics: Immutable snapshot of kernel state
 - MetricsCollector: Aggregates metrics over time
+- PrometheusRegistry: V1 hardening Prometheus-style counters and gauges
 - Export formats: Prometheus text, JSONL
 
 Usage:
-    from governance.metrics import MetricsCollector
+    from governance.metrics import MetricsCollector, PrometheusRegistry
     
     collector = MetricsCollector()
-    kernel = GovernanceKernel(profile)
+    registry = PrometheusRegistry()
     
     # After each step
     result = kernel.step(...)
     collector.record(result, signals)
+    registry.record_step(result)
     
     # Export
-    print(collector.to_prometheus())
-    collector.to_jsonl("metrics.jsonl")
+    print(registry.to_prometheus_text())
 """
 import json
 from dataclasses import dataclass, asdict, field
 from datetime import datetime, timezone
 from typing import List, Callable, Optional, Dict, Any
-from governance.result import EngineResult
-from governance.signals import Signals
+from collections import defaultdict
+
+try:
+    from governance.result import EngineResult
+    from governance.signals import Signals
+except ImportError:
+    import os
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from governance.result import EngineResult
+    from governance.signals import Signals
 
 
 @dataclass(frozen=True)
@@ -74,6 +84,198 @@ class GovernanceMetrics:
     def to_json(self) -> str:
         """Convert to JSON string."""
         return json.dumps(self.to_dict())
+
+
+# =============================================================================
+# Prometheus-Style Metrics (V1 Hardening)
+# =============================================================================
+
+class Counter:
+    """
+    Prometheus-style counter that only increases.
+    """
+    def __init__(self, name: str, help_text: str, labels: Optional[List[str]] = None):
+        self.name = name
+        self.help_text = help_text
+        self.labels = labels or []
+        self._values: Dict[tuple, float] = defaultdict(float)
+        self._total = 0.0
+    
+    def inc(self, value: float = 1.0, labels: Optional[Dict[str, str]] = None) -> None:
+        """Increment the counter."""
+        if labels:
+            key = tuple(sorted(labels.items()))
+            self._values[key] += value
+        else:
+            self._total += value
+    
+    def get(self, labels: Optional[Dict[str, str]] = None) -> float:
+        """Get current value."""
+        if labels:
+            key = tuple(sorted(labels.items()))
+            return self._values[key]
+        return self._total
+    
+    def to_prometheus(self) -> str:
+        """Export in Prometheus text format."""
+        lines = [
+            f"# HELP {self.name} {self.help_text}",
+            f"# TYPE {self.name} counter",
+        ]
+        
+        if self._values:
+            for key, value in sorted(self._values.items()):
+                label_str = ",".join(f'{k}="{v}"' for k, v in key)
+                lines.append(f"{self.name}{{{label_str}}} {value}")
+        else:
+            lines.append(f"{self.name} {self._total}")
+        
+        return "\n".join(lines)
+
+
+class Gauge:
+    """
+    Prometheus-style gauge that can go up or down.
+    """
+    def __init__(self, name: str, help_text: str):
+        self.name = name
+        self.help_text = help_text
+        self._value = 0.0
+    
+    def set(self, value: float) -> None:
+        """Set the gauge value."""
+        self._value = value
+    
+    def inc(self, value: float = 1.0) -> None:
+        """Increment the gauge."""
+        self._value += value
+    
+    def dec(self, value: float = 1.0) -> None:
+        """Decrement the gauge."""
+        self._value -= value
+    
+    def get(self) -> float:
+        """Get current value."""
+        return self._value
+    
+    def to_prometheus(self) -> str:
+        """Export in Prometheus text format."""
+        return "\n".join([
+            f"# HELP {self.name} {self.help_text}",
+            f"# TYPE {self.name} gauge",
+            f"{self.name} {self._value:.4f}",
+        ])
+
+
+class PrometheusRegistry:
+    """
+    Registry of Prometheus-style metrics for governance observability.
+    
+    V1 Hardening Metrics:
+    - agent_steps_total: Total agent steps executed
+    - halts_by_reason: Halts counted by reason label
+    - audit_entries_written: Total audit entries written
+    - effort_drain_rate: Current effort drain rate
+    - governance_budget_*: Current budget values (effort, risk, exploration, persistence)
+    """
+    
+    def __init__(self):
+        # Counters
+        self.steps_total = Counter(
+            "agent_steps_total",
+            "Total agent steps executed"
+        )
+        self.halts_by_reason = Counter(
+            "halts_by_reason",
+            "Halts counted by reason",
+            labels=["reason"]
+        )
+        self.audit_entries_written = Counter(
+            "audit_entries_written",
+            "Total audit entries written"
+        )
+        
+        # Gauges
+        self.effort_drain_rate = Gauge(
+            "effort_drain_rate",
+            "Current effort drain rate per step"
+        )
+        self.budget_effort = Gauge(
+            "governance_budget_effort",
+            "Current effort budget [0,1]"
+        )
+        self.budget_risk = Gauge(
+            "governance_budget_risk",
+            "Current risk budget [0,1]"
+        )
+        self.budget_exploration = Gauge(
+            "governance_budget_exploration",
+            "Current exploration budget [0,1]"
+        )
+        self.budget_persistence = Gauge(
+            "governance_budget_persistence",
+            "Current persistence budget [0,1]"
+        )
+        self.halted = Gauge(
+            "governance_halted",
+            "Whether the kernel is halted (0/1)"
+        )
+        
+        # Internal tracking
+        self._previous_effort = 1.0
+        self._all_metrics = [
+            self.steps_total,
+            self.halts_by_reason,
+            self.audit_entries_written,
+            self.effort_drain_rate,
+            self.budget_effort,
+            self.budget_risk,
+            self.budget_exploration,
+            self.budget_persistence,
+            self.halted,
+        ]
+    
+    def record_step(self, result: EngineResult) -> None:
+        """
+        Record metrics from a kernel step result.
+        
+        Args:
+            result: The EngineResult from kernel.step()
+        """
+        # Increment step counter
+        self.steps_total.inc()
+        
+        # Record halt if applicable
+        if result.halted and result.reason:
+            self.halts_by_reason.inc(labels={"reason": result.reason})
+        
+        # Update budget gauges
+        self.budget_effort.set(result.budget.effort)
+        self.budget_risk.set(result.budget.risk)
+        self.budget_exploration.set(result.budget.exploration)
+        self.budget_persistence.set(result.budget.persistence)
+        
+        # Calculate effort drain rate
+        drain = self._previous_effort - result.budget.effort
+        self.effort_drain_rate.set(max(0.0, drain))
+        self._previous_effort = result.budget.effort
+        
+        # Update halted state
+        self.halted.set(1.0 if result.halted else 0.0)
+    
+    def record_audit_entry(self) -> None:
+        """Record that an audit entry was written."""
+        self.audit_entries_written.inc()
+    
+    def to_prometheus_text(self) -> str:
+        """
+        Export all metrics in Prometheus text format.
+        
+        Returns:
+            Complete Prometheus metrics text
+        """
+        sections = [m.to_prometheus() for m in self._all_metrics]
+        return "\n\n".join(sections)
 
 
 class MetricsCollector:

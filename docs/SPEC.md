@@ -167,8 +167,14 @@ This is what makes the system real.
 
 Enforcement levels:
 1.  **In-Process** (PoC, bypassable)
-2.  **HTTP Proxy** (production-grade)
+2.  **HTTP Proxy** (production-grade) ✓ *Implemented in v1.0*
 3.  **Sidecar / Network Boundary** (infra-grade, unbypassable)
+
+V1.0 Features:
+- FastAPI-based HTTP proxy with fail-closed middleware
+- Returns 403 Forbidden on any halt or error
+- Prometheus metrics at `/metrics` endpoint
+- Hash-chained audit trail with SHA256 linking
 
 > Without enforcement, you do not have a harness — only a library.
 

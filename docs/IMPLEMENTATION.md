@@ -638,7 +638,7 @@ class PostgreSQLAuditStorage:
 
 To satisfy your spec's **5 litmus test criteria**, you need:
 
-### Week 1-2: Core Components
+### Week 1-2: Core Components ✅ COMPLETE
 ```
 ✅ 1. Signal extraction system
 ✅ 2. Budget management
@@ -649,10 +649,14 @@ To satisfy your spec's **5 litmus test criteria**, you need:
 
 **Test:** Can an agent be prevented from exceeding limits?
 
-### Week 3-4: Enforcement Upgrade
+### Week 3-4: Enforcement Upgrade ✅ COMPLETE (v1.0)
 ```
-✅ 6. HTTP proxy enforcer
+✅ 6. HTTP proxy enforcer (FastAPI)
 ✅ 7. Integration with LangChain/AutoGen
+✅ 8. Hash-chained audit trails (SHA256)
+✅ 9. Prometheus metrics endpoint
+✅ 10. Safe-kernel contracts
+✅ 11. YAML policy configuration
 ```
 
 **Test:** Can agent bypass governance? (Answer must be NO)
@@ -664,3 +668,20 @@ To satisfy your spec's **5 litmus test criteria**, you need:
 ```
 
 **Test:** Can multi-agent system be governed?
+
+---
+
+## V1.0 Hardening Reference
+
+New modules added in v1.0:
+
+| Module | Purpose |
+|:---|:---|
+| `proxy_enforcer.py` | FastAPI HTTP proxy with fail-closed middleware |
+| `contracts.py` | Runtime invariant assertions |
+| `policy_loader.py` | YAML configuration loader |
+| `metrics.py` (enhanced) | Prometheus Counter/Gauge/Registry |
+
+Configuration files:
+- `config/policies.yaml` - Governance parameter tuning
+- `dashboards/agent_harness_v1.json` - Grafana dashboard
