@@ -1,11 +1,11 @@
 import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.failures import FailureType
 from governance.profiles import ProfileType, PROFILES
 def test_failure_enum_present_on_halt():
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
     
     out = None
     for _ in range(20):
@@ -15,7 +15,7 @@ def test_failure_enum_present_on_halt():
 
     assert out.failure != FailureType.NONE
 def test_post_failure_is_sticky():
-    agent = EmoCoreAgent(profile=PROFILES[ProfileType.CONSERVATIVE])
+    agent = GovernanceAgent(profile=PROFILES[ProfileType.CONSERVATIVE])
 
     # Force exhaustion
     for _ in range(500):

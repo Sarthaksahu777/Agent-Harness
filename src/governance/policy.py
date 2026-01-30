@@ -1,4 +1,4 @@
-# emocore/policy.py
+# Governance Engine/policy.py
 """
 NOTE:
 This component is downstream of Governance Kernel.

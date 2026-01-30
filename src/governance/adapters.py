@@ -1,4 +1,4 @@
-# emocore/adapters.py
+# Governance Engine/adapters.py
 """
 Integration Surface: Reusable adapters for typical agent loops.
 These wrappers simplify the 'observe()' pattern by handling timing and
@@ -11,7 +11,7 @@ from contextlib import contextmanager
 
 from governance.observation import Observation
 from governance.interface import observe, StepResult
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 
 
 class LLMLoopAdapter:
@@ -22,7 +22,7 @@ class LLMLoopAdapter:
     high-level execution results.
     """
     
-    def __init__(self, agent: EmoCoreAgent, token_limit: int = 100000):
+    def __init__(self, agent: GovernanceAgent, token_limit: int = 100000):
         self.agent = agent
         self.token_limit = token_limit
         self.last_step_start = 0.0
@@ -43,7 +43,7 @@ class LLMLoopAdapter:
         validator: Any = None
     ) -> StepResult:
         """
-        Produce an EmoCore governance decision for the completed step.
+        Produce an Governance Engine governance decision for the completed step.
         """
         elapsed = time.monotonic() - self.last_step_start
         
@@ -72,7 +72,7 @@ class ToolCallingAgentAdapter:
     Provides a context manager for auditing tool executions.
     """
     
-    def __init__(self, agent: EmoCoreAgent):
+    def __init__(self, agent: GovernanceAgent):
         self.agent = agent
         
     @contextmanager

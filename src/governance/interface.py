@@ -1,10 +1,10 @@
-# emocore/interface.py
+# Governance Engine/interface.py
 
 from dataclasses import dataclass, asdict
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.observation import Observation
 from governance.extractor import SignalExtractor, RuleBasedExtractor
 from governance.validator import SignalValidator
@@ -18,7 +18,7 @@ from governance.modes import Mode
 
 
 
-def step(agent: EmoCoreAgent, signals: Signals) -> StepResult:
+def step(agent: GovernanceAgent, signals: Signals) -> StepResult:
     """
     Canonical public interface.
     Pure function: no mutation of inputs.
@@ -48,7 +48,7 @@ def step(agent: EmoCoreAgent, signals: Signals) -> StepResult:
 
 
 def observe(
-    agent: EmoCoreAgent, 
+    agent: GovernanceAgent, 
     observation: Observation,
     extractor: SignalExtractor | None = None,
     validator: SignalValidator | None = None
@@ -61,7 +61,7 @@ def observe(
     deterministic governance.
     
     Args:
-        agent: The EmoCore agent instance.
+        agent: The Governance Engine agent instance.
         observation: The behavioral evidence via an Adapter.
         extractor: Optional custom extractor. Defaults to RuleBasedExtractor.
         validator: Optional custom validator. Defaults to SignalValidator(strict=False).

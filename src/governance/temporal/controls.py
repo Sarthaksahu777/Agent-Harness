@@ -1,4 +1,4 @@
-# emocore/temporal/controls.py
+# Governance Engine/temporal/controls.py
 """
 Control primitives.
 

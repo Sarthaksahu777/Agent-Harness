@@ -4,14 +4,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 
 import time
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.failures import FailureType
 from governance.modes import Mode
 from governance.profiles import PROFILES,ProfileType
 #A. Infinite Loop Resistance
 
 def test_infinite_loop_resistance():
-    agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+    agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
 
     out = None
     for _ in range(500):
@@ -34,7 +34,7 @@ def test_infinite_loop_resistance():
 #B. Adversarial Urgency Flood
 
 def test_adversarial_urgency_flood():
-    agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+    agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
 
     out = None
     for _ in range(300):
@@ -59,9 +59,9 @@ def test_adversarial_urgency_flood():
 
 def test_profile_divergence_identical_inputs():
     agents = {
-        "cons": EmoCoreAgent(PROFILES[ProfileType.CONSERVATIVE]),
-        "bal": EmoCoreAgent(PROFILES[ProfileType.BALANCED]),
-        "agg": EmoCoreAgent(PROFILES[ProfileType.AGGRESSIVE]),
+        "cons": GovernanceAgent(PROFILES[ProfileType.CONSERVATIVE]),
+        "bal": GovernanceAgent(PROFILES[ProfileType.BALANCED]),
+        "agg": GovernanceAgent(PROFILES[ProfileType.AGGRESSIVE]),
     }
 
     halt_steps = {}
@@ -82,7 +82,7 @@ def test_profile_divergence_identical_inputs():
 #D. Recovery Boundary Test
 
 def test_recovery_boundary():
-    agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+    agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
 
     # Drive toward exhaustion
     for _ in range(50):
@@ -118,7 +118,7 @@ def test_recovery_boundary():
 #E. Post-Halt Integrity
 
 def test_post_halt_integrity():
-    agent = EmoCoreAgent(PROFILES[ProfileType.CONSERVATIVE])
+    agent = GovernanceAgent(PROFILES[ProfileType.CONSERVATIVE])
 
     # Force halt
     for _ in range(200):

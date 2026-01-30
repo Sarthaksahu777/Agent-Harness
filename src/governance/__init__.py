@@ -1,17 +1,17 @@
-# emocore/__init__.py
+# Governance Engine/__init__.py
 """
-EmoCore - Runtime Governance for Autonomous Agents
+Governance Engine - Runtime Governance for Autonomous Agents
 
 Public API:
-    from governance import EmoCoreAgent, step, Signals
+    from governance import GovernanceAgent, step, Signals
     from governance.profiles import PROFILES, ProfileType
 
 Usage:
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
     result = step(agent, Signals(reward=0.5, novelty=0.1, urgency=0.2))
 """
 
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.interface import step, observe, Signals
 from governance.observation import Observation
 from governance.adapters import LLMLoopAdapter, ToolCallingAgentAdapter
@@ -43,7 +43,8 @@ PressureState = ControlState
 
 __all__ = [
     # Main API
-    "EmoCoreAgent",
+    "GovernanceAgent",
+    "GovernanceAgent",  # Alias
     "step",
     "observe",
     "Signals",

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-CrewAI + Ollama + EmoCore Integration
+CrewAI + Ollama + Governance Engine Integration
 ======================================
 
-Run CrewAI agents with EmoCore governance using a local Ollama model.
+Run CrewAI agents with Governance Engine governance using a local Ollama model.
 
 REQUIREMENTS:
     pip install crewai openai
@@ -39,7 +39,7 @@ except ImportError:
     print("    pip install openai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -48,7 +48,7 @@ OLLAMA_MODEL = "gemma3:1b"
 OLLAMA_BASE_URL = "http://localhost:11434/v1"
 
 # ============================================================
-# EmoCore-Governed CrewAI
+# Governance Engine-Governed CrewAI
 # ============================================================
 
 def check_ollama():
@@ -67,7 +67,7 @@ def check_ollama():
 
 def run_governed_crew():
     print("=" * 60)
-    print("CREWAI + OLLAMA + EMOCORE")
+    print("CREWAI + OLLAMA + Governance Engine")
     print("=" * 60)
     
     # 1. Check Ollama
@@ -77,9 +77,9 @@ def run_governed_crew():
         sys.exit(1)
     print(f"[+] Connected to Ollama ({OLLAMA_MODEL})")
     
-    # 2. Initialize EmoCore
-    emocore_agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    Governance Engine_agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Define CrewAI agents
@@ -96,7 +96,7 @@ def run_governed_crew():
     )
     
     task = Task(
-        description="Summarize what EmoCore does in one sentence.",
+        description="Summarize what Governance Engine does in one sentence.",
         expected_output="A single sentence summary.",
         agent=researcher
     )
@@ -109,7 +109,7 @@ def run_governed_crew():
     # In production, you'd hook into CrewAI's callback system
     
     print("\n[Governance Check: Pre-Execution]")
-    pre_result = step(emocore_agent, Signals(reward=0.5, novelty=0.8, urgency=0.1))
+    pre_result = step(Governance Engine_agent, Signals(reward=0.5, novelty=0.8, urgency=0.1))
     print(f"Mode={pre_result.mode.name} | Effort={pre_result.budget.effort:.2f}")
     
     if pre_result.halted:

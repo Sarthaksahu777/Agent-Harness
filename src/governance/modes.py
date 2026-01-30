@@ -1,6 +1,6 @@
-# emocore/modes.py
+# Governance Engine/modes.py
 """
-EmoCore operational modes.
+Governance Engine operational modes.
 
 Mode semantics:
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-OpenAI SDK + Ollama + EmoCore Integration
+OpenAI SDK + Ollama + Governance Engine Integration
 ==========================================
 
-Use the OpenAI SDK with Ollama's OpenAI-compatible API, governed by EmoCore.
+Use the OpenAI SDK with Ollama's OpenAI-compatible API, governed by Governance Engine.
 
 REQUIREMENTS:
     pip install openai
@@ -26,7 +26,7 @@ except ImportError as e:
     print("\n[+] Install with: pip install openai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -36,12 +36,12 @@ OLLAMA_BASE_URL = "http://localhost:11434/v1"
 MAX_ITERATIONS = 15
 
 # ============================================================
-# EmoCore-Governed OpenAI SDK Loop
+# Governance Engine-Governed OpenAI SDK Loop
 # ============================================================
 
 def run_governed_loop():
     print("=" * 60)
-    print("OPENAI SDK + OLLAMA + EMOCORE")
+    print("OPENAI SDK + OLLAMA + Governance Engine")
     print("=" * 60)
     
     # 1. Initialize OpenAI client pointing to Ollama
@@ -64,9 +64,9 @@ def run_governed_loop():
         print("  ollama run gemma3:1b")
         sys.exit(1)
     
-    # 2. Initialize EmoCore
-    agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Agentic loop with governance
@@ -106,13 +106,13 @@ def run_governed_loop():
             urgency=iteration / MAX_ITERATIONS
         )
         
-        # 4. EmoCore governance
+        # 4. Governance Engine governance
         result = step(agent, signals)
         print(f"Gov: Mode={result.mode.name} | Effort={result.budget.effort:.2f}")
         
         if result.halted:
             print("\n" + "!" * 60)
-            print(f"EMOCORE HALTED: {result.reason}")
+            print(f"Governance Engine HALTED: {result.reason}")
             print(f"Failure Type: {result.failure.name}")
             print("!" * 60)
             break

@@ -1,4 +1,4 @@
-# emocore/agent.py
+# Governance Engine/agent.py
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -6,13 +6,11 @@ from governance.kernel import GovernanceEngine
 from governance.profiles import Profile, PROFILES, ProfileType
 
 
-class EmoCoreAgent:
+class GovernanceAgent:
     """
     Main entry point for the governance system.
     
     Acts as a facade over the internal GovernanceEngine.
-    Preserves the name 'EmoCoreAgent' for compatibility, but uses
-    engineering terminology internally.
     """
     def __init__(self, profile: Profile = PROFILES[ProfileType.BALANCED]):
         self.engine = GovernanceEngine(profile)
@@ -26,5 +24,7 @@ class EmoCoreAgent:
         self.engine.reset(reason)
 
 
-# Backward compatibility alias
-EmoAgent = EmoCoreAgent
+# Backward compatibility aliases
+GovernanceEngineFacade = GovernanceAgent
+GovernanceAgent = GovernanceAgent
+EmoAgent = GovernanceAgent

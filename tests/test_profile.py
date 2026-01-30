@@ -1,7 +1,7 @@
 import os 
 import sys 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.profiles import Profile, PROFILES, ProfileType
 from governance.failures import FailureType
 from governance.state import ControlState
@@ -9,8 +9,8 @@ import time
 import dataclasses
 
 def test_conservative_halts_earlier_than_balanced():
-    bal = EmoCoreAgent(profile=PROFILES[ProfileType.BALANCED])
-    cons = EmoCoreAgent(profile=PROFILES[ProfileType.CONSERVATIVE])
+    bal = GovernanceAgent(profile=PROFILES[ProfileType.BALANCED])
+    cons = GovernanceAgent(profile=PROFILES[ProfileType.CONSERVATIVE])
 
     # Prime state to ensure budget > exhaustion threshold
     # Control Margin 0.5 -> Effort ~0.3 (0.6 * 0.5)
@@ -42,8 +42,8 @@ def test_conservative_halts_earlier_than_balanced():
         assert halted_cons < halted_bal
 
 def test_aggressive_halts_later_than_balanced():
-    bal = EmoCoreAgent(profile=PROFILES[ProfileType.BALANCED])
-    agg = EmoCoreAgent(profile=PROFILES[ProfileType.AGGRESSIVE])
+    bal = GovernanceAgent(profile=PROFILES[ProfileType.BALANCED])
+    agg = GovernanceAgent(profile=PROFILES[ProfileType.AGGRESSIVE])
 
     # Prime state
     start_state = ControlState(control_margin=0.5)
@@ -88,7 +88,7 @@ def test_overrisk_halts_engine():
         risk_scale=5.0,
     )
 
-    core = EmoCoreAgent(profile=profile)
+    core = GovernanceAgent(profile=profile)
     # Prime high risk state
     # Risk Budget = 0.5 * State.risk * risk_scale(5.0)
     # If state.risk = 1.0 -> Budget = 2.5 > 0.3.
@@ -108,9 +108,9 @@ def test_overrisk_halts_engine():
     assert out.failure == FailureType.OVERRISK
 
 def test_profile_halt_ordering():
-    bal = EmoCoreAgent(profile=PROFILES[ProfileType.BALANCED])
-    cons = EmoCoreAgent(profile=PROFILES[ProfileType.CONSERVATIVE])
-    agg = EmoCoreAgent(profile=PROFILES[ProfileType.AGGRESSIVE])
+    bal = GovernanceAgent(profile=PROFILES[ProfileType.BALANCED])
+    cons = GovernanceAgent(profile=PROFILES[ProfileType.CONSERVATIVE])
+    agg = GovernanceAgent(profile=PROFILES[ProfileType.AGGRESSIVE])
 
     # Prime state to prevent immediate exhaustion
     start_state = ControlState(control_margin=0.5)
@@ -141,8 +141,8 @@ def test_profile_halt_ordering():
 def test_profiles_fail_differently():
     # Force Cons to fail by OVERRISK (max_risk=0.0) while Agg fails by EXHAUSTION
     cons_p = dataclasses.replace(PROFILES[ProfileType.CONSERVATIVE], max_risk=0.0)
-    cons = EmoCoreAgent(profile=cons_p)
-    agg = EmoCoreAgent(profile=PROFILES[ProfileType.AGGRESSIVE])
+    cons = GovernanceAgent(profile=cons_p)
+    agg = GovernanceAgent(profile=PROFILES[ProfileType.AGGRESSIVE])
 
     # Prime state with some risk
     start_state = ControlState(control_margin=0.5, risk=0.1)

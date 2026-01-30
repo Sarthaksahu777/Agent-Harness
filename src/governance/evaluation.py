@@ -1,4 +1,4 @@
-# emocore/evaluation.py
+# Governance Engine/evaluation.py
 """
 SignalEvaluator: Converts environmental signals into control state deltas.
 

@@ -1,4 +1,4 @@
-# emocore/temporal/signals.py
+# Governance Engine/temporal/signals.py
 """
 Temporal signal processors.
 

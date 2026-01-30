@@ -4,7 +4,7 @@ Stress Test: The Orphaned Signal Attack
 =======================================
 
 Scenario: Provide extremely high novelty with zero reward for long periods.
-Intent: Can high novelty "trick" EmoCore into continuing forever?
+Intent: Can high novelty "trick" Governance Engine into continuing forever?
 Detection: Signal Trust and Novelty Debt should eventually kill the exploration.
 """
 
@@ -13,14 +13,14 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from governance import EmoCoreAgent, observe, Observation, PROFILES, ProfileType
+from governance import GovernanceAgent, observe, Observation, PROFILES, ProfileType
 
 def stress_test_orphaned_signal():
     print("=" * 60)
     print("STRESS TEST: THE ORPHANED SIGNAL ATTACK")
     print("=" * 60)
     
-    agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+    agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
     
     for step in range(1, 101):
         # Extremely high novelty, but no result
@@ -40,14 +40,14 @@ def stress_test_orphaned_signal():
             
         if res.halted:
             print("\n" + "=" * 60)
-            print(f"[SUCCESS] EmoCore HALTED at step {step}")
+            print(f"[SUCCESS] Governance Engine HALTED at step {step}")
             print(f"Reason: {res.reason}")
             print(f"Failure Type: {res.failure.name}")
             print("=" * 60)
             return True
             
     print("\n" + "!" * 60)
-    print("[FAILURE] EmoCore did not halt within 100 steps!")
+    print("[FAILURE] Governance Engine did not halt within 100 steps!")
     print("Looplhole detected: High novelty + fake agents can survive forever.")
     print("!" * 60)
     return False

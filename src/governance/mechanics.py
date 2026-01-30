@@ -1,4 +1,4 @@
-# emocore/governance.py
+# Governance Engine/governance.py
 """
 GovernanceEngine: Translates control state into behavioral permission.
 

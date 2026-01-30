@@ -1,8 +1,8 @@
-# emocore/behavior.py
+# Governance Engine/behavior.py
 """
-Behavior budget: EmoCore's output representing permission to act.
+Behavior budget: Governance Engine's output representing permission to act.
 
-BehaviorBudget is the ONLY output of EmoCore that downstream systems should consume.
+BehaviorBudget is the ONLY output of Governance Engine that downstream systems should consume.
 It represents *permission*, not *action*. Downstream control primitives decide
 how to translate permission into actual behavior.
 
@@ -26,10 +26,10 @@ class BehaviorBudget:
     """
     Immutable budget representing behavioral permission.
     
-    This is EmoCore's output. It represents how much the agent is
+    This is Governance Engine's output. It represents how much the agent is
     permitted to do, not what the agent should do.
     
-    EmoCore regulates permission. Control primitives decide execution.
+    Governance Engine regulates permission. Control primitives decide execution.
     """
     effort: float
     risk: float
@@ -40,7 +40,7 @@ class BehaviorBudget:
 class BehaviorGate:
     """
     NOTE: This is a downstream control primitive.
-    It must NOT influence EmoCore state, failure, or recovery.
+    It must NOT influence Governance Engine state, failure, or recovery.
     
     BehaviorGate applies budget constraints to action parameters.
     It consumes BehaviorBudget, it does not produce or modify it.

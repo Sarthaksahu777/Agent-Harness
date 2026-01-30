@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-OpenAI SDK + EmoCore Integration
+OpenAI SDK + Governance Engine Integration
 =================================
 
-Use the OpenAI SDK directly with EmoCore governance.
+Use the OpenAI SDK directly with Governance Engine governance.
 
 REQUIREMENTS:
     pip install openai
@@ -36,7 +36,7 @@ except ImportError as e:
     print("\n[+] Install with: pip install openai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -45,21 +45,21 @@ OPENAI_MODEL = "gpt-4o-mini"
 MAX_ITERATIONS = 15
 
 # ============================================================
-# EmoCore-Governed OpenAI Loop
+# Governance Engine-Governed OpenAI Loop
 # ============================================================
 
 def run_governed_loop():
     print("=" * 60)
-    print("OPENAI SDK + EMOCORE")
+    print("OPENAI SDK + Governance Engine")
     print("=" * 60)
     
     # 1. Initialize client
     client = OpenAI()
     print(f"[+] Connected to OpenAI ({OPENAI_MODEL})")
     
-    # 2. Initialize EmoCore
-    agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Agentic loop
@@ -96,7 +96,7 @@ def run_governed_loop():
             urgency=iteration / MAX_ITERATIONS
         )
         
-        # EmoCore check
+        # Governance Engine check
         result = step(agent, signals)
         print(f"Gov: Mode={result.mode.name} | Effort={result.budget.effort:.2f}")
         

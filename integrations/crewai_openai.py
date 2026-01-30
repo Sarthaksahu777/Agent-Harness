@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-CrewAI + OpenAI + EmoCore Integration
+CrewAI + OpenAI + Governance Engine Integration
 ======================================
 
-Run CrewAI agents with EmoCore governance using the OpenAI API.
+Run CrewAI agents with Governance Engine governance using the OpenAI API.
 
 REQUIREMENTS:
     pip install crewai
@@ -36,7 +36,7 @@ except ImportError as e:
     print("\n[+] Install with: pip install crewai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -44,17 +44,17 @@ from governance import EmoCoreAgent, step, Signals
 OPENAI_MODEL = "gpt-4o-mini"
 
 # ============================================================
-# EmoCore-Governed CrewAI
+# Governance Engine-Governed CrewAI
 # ============================================================
 
 def run_governed_crew():
     print("=" * 60)
-    print("CREWAI + OPENAI + EMOCORE")
+    print("CREWAI + OPENAI + Governance Engine")
     print("=" * 60)
     
-    # 1. Initialize EmoCore
-    emocore_agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 1. Initialize Governance Engine
+    Governance Engine_agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 2. Define CrewAI agents
@@ -68,7 +68,7 @@ def run_governed_crew():
     )
     
     task = Task(
-        description="Summarize what EmoCore does in one sentence.",
+        description="Summarize what Governance Engine does in one sentence.",
         expected_output="A single sentence summary.",
         agent=researcher
     )
@@ -79,7 +79,7 @@ def run_governed_crew():
     
     # 3. Governance check
     print("\n[Governance Check: Pre-Execution]")
-    pre_result = step(emocore_agent, Signals(reward=0.5, novelty=0.8, urgency=0.1))
+    pre_result = step(Governance Engine_agent, Signals(reward=0.5, novelty=0.8, urgency=0.1))
     print(f"Mode={pre_result.mode.name} | Effort={pre_result.budget.effort:.2f}")
     
     if pre_result.halted:

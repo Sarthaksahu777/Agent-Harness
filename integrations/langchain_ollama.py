@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-LangChain + Ollama + EmoCore Integration
+LangChain + Ollama + Governance Engine Integration
 =========================================
 
-Run a LangChain agent loop with EmoCore governance using a local Ollama model.
+Run a LangChain agent loop with Governance Engine governance using a local Ollama model.
 
 REQUIREMENTS:
     pip install langchain langchain-ollama
@@ -28,7 +28,7 @@ except ImportError as e:
     print("\n[+] Install with: pip install langchain langchain-ollama")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -38,12 +38,12 @@ OLLAMA_BASE_URL = "http://localhost:11434"
 MAX_ITERATIONS = 20
 
 # ============================================================
-# EmoCore-Governed LangChain Agent
+# Governance Engine-Governed LangChain Agent
 # ============================================================
 
 def run_governed_agent():
     print("=" * 60)
-    print("LANGCHAIN + OLLAMA + EMOCORE")
+    print("LANGCHAIN + OLLAMA + Governance Engine")
     print("=" * 60)
     
     # 1. Initialize LLM (Ollama)
@@ -58,13 +58,13 @@ def run_governed_agent():
         print("  ollama run gemma3:1b")
         sys.exit(1)
     
-    # 2. Initialize EmoCore
-    agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Simulated task loop
-    task = "Explain what EmoCore does in one sentence."
+    task = "Explain what Governance Engine does in one sentence."
     messages = [HumanMessage(content=task)]
     
     for iteration in range(MAX_ITERATIONS):
@@ -90,14 +90,14 @@ def run_governed_agent():
             urgency=iteration / MAX_ITERATIONS
         )
         
-        # 4. EmoCore governance check
+        # 4. Governance Engine governance check
         result = step(agent, signals)
         
         print(f"Gov: Mode={result.mode.name} | Effort={result.budget.effort:.2f}")
         
         if result.halted:
             print("\n" + "!" * 60)
-            print(f"EMOCORE HALTED: {result.reason}")
+            print(f"Governance Engine HALTED: {result.reason}")
             print(f"Failure Type: {result.failure.name}")
             print("!" * 60)
             break

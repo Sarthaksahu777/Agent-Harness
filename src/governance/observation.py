@@ -7,7 +7,7 @@ class Observation:
     Represents an observable behavior snapshot from an agent.
     
     This is the universal contract between the outside world (via Adapters)
-    and the EmoCore extraction layer. Adapters must convert domain-specific
+    and the Governance Engine extraction layer. Adapters must convert domain-specific
     data (LLM responses, robot logs, etc.) into this format.
     
     Attributes:

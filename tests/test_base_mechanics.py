@@ -2,7 +2,7 @@
 """
 Hardcore Base Prototype Test Suite
 
-These tests verify the core semantic promises of EmoCore:
+These tests verify the core semantic promises of Governance Engine:
 - Infinite loop prevention
 - Bounded agency
 - Explicit failure
@@ -14,7 +14,7 @@ import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
 
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.failures import FailureType
 from governance.modes import Mode
 from governance.profiles import PROFILES, ProfileType
@@ -26,13 +26,13 @@ from governance.profiles import PROFILES, ProfileType
 def test_infinite_zero_reward_loop_halts():
     """
     What this proves:
-    - EmoCore does not allow infinite retries
+    - Governance Engine does not allow infinite retries
     - Stagnation is detected
     - Failure is explicit
     
-    If this fails → EmoCore is fake governance.
+    If this fails → Governance Engine is fake governance.
     """
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
     
     last = None
     for i in range(1_000):
@@ -80,7 +80,7 @@ def test_runaway_risk_halts_engine():
         exhaustion_threshold=0.0,     # Prevent exhaustion
         stagnation_window=1000,       # Prevent stagnation
     )
-    agent = EmoCoreAgent(overrisk_profile)
+    agent = GovernanceAgent(overrisk_profile)
     
     # Prime state with high risk pressure
     agent.engine.state = ControlState(risk=1.0, control_margin=1.0)
@@ -111,7 +111,7 @@ def test_recovery_only_in_recovering_mode():
     
     If effort increases in IDLE → recovery is broken.
     """
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
 
     r1 = agent.step(0.0, 0.0, 0.0)
     r2 = agent.step(0.0, 0.0, 0.0)
@@ -131,7 +131,7 @@ def test_risk_frozen_during_recovery():
     
     If risk increases → recovery is unsafe.
     """
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
 
     # Force recovery
     for _ in range(50):
@@ -156,7 +156,7 @@ def test_recovery_bounded_by_pre_failure_budget():
     - Recovery is bounded
     - No post-failure "superpower"
     """
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
 
     # Drive system until just before recovery
     last_idle = None
@@ -185,7 +185,7 @@ def test_halt_is_terminal():
     - Failure ends the session
     - No post-halt evolution
     """
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
 
     out = None
     for _ in range(500):
@@ -215,9 +215,9 @@ def test_profiles_diverge_on_identical_inputs():
     If this ordering fails → profiles are meaningless.
     """
     agents = {
-        "conservative": EmoCoreAgent(PROFILES[ProfileType.CONSERVATIVE]),
-        "balanced": EmoCoreAgent(PROFILES[ProfileType.BALANCED]),
-        "aggressive": EmoCoreAgent(PROFILES[ProfileType.AGGRESSIVE]),
+        "conservative": GovernanceAgent(PROFILES[ProfileType.CONSERVATIVE]),
+        "balanced": GovernanceAgent(PROFILES[ProfileType.BALANCED]),
+        "aggressive": GovernanceAgent(PROFILES[ProfileType.AGGRESSIVE]),
     }
 
     halt_steps = {}
@@ -240,7 +240,7 @@ def test_budget_always_bounded():
     What this proves:
     - Hard safety invariants always hold
     """
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
 
     for _ in range(500):
         out = agent.step(0.5, 0.5, 0.5)

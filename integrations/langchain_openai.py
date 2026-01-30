@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-LangChain + OpenAI + EmoCore Integration
+LangChain + OpenAI + Governance Engine Integration
 =========================================
 
-Run a LangChain agent with EmoCore governance using the OpenAI API.
+Run a LangChain agent with Governance Engine governance using the OpenAI API.
 
 REQUIREMENTS:
     pip install langchain langchain-openai
@@ -37,7 +37,7 @@ except ImportError as e:
     print("\n[+] Install with: pip install langchain langchain-openai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -46,25 +46,25 @@ OPENAI_MODEL = "gpt-4o-mini"  # Cost-effective model
 MAX_ITERATIONS = 20
 
 # ============================================================
-# EmoCore-Governed LangChain Agent
+# Governance Engine-Governed LangChain Agent
 # ============================================================
 
 def run_governed_agent():
     print("=" * 60)
-    print("LANGCHAIN + OPENAI + EMOCORE")
+    print("LANGCHAIN + OPENAI + Governance Engine")
     print("=" * 60)
     
     # 1. Initialize LLM
     llm = ChatOpenAI(model=OPENAI_MODEL, temperature=0)
     print(f"[+] Connected to OpenAI ({OPENAI_MODEL})")
     
-    # 2. Initialize EmoCore
-    agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Task loop
-    task = "Explain what EmoCore does in one sentence."
+    task = "Explain what Governance Engine does in one sentence."
     messages = [HumanMessage(content=task)]
     
     for iteration in range(MAX_ITERATIONS):
@@ -86,7 +86,7 @@ def run_governed_agent():
             urgency=iteration / MAX_ITERATIONS
         )
         
-        # EmoCore check
+        # Governance Engine check
         result = step(agent, signals)
         print(f"Gov: Mode={result.mode.name} | Effort={result.budget.effort:.2f}")
         

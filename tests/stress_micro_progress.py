@@ -13,14 +13,14 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from governance import EmoCoreAgent, observe, Observation, PROFILES, ProfileType
+from governance import GovernanceAgent, observe, Observation, PROFILES, ProfileType
 
 def stress_test_micro_progress():
     print("=" * 60)
     print("STRESS TEST: THE MICRO-PROGRESS LOOP")
     print("=" * 60)
     
-    agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+    agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
     
     for step in range(1, 1001):
         # Env change is EXACTLY at the default progress threshold
@@ -39,13 +39,13 @@ def stress_test_micro_progress():
             
         if res.halted:
             print("\n" + "=" * 60)
-            print(f"[RESULT] EmoCore HALTED at step {step}")
+            print(f"[RESULT] Governance Engine HALTED at step {step}")
             print(f"Reason: {res.reason}")
             print("=" * 60)
             return True
             
     print("\n" + "!" * 60)
-    print("[WARNING] EmoCore did not halt within 1000 steps of micro-progress.")
+    print("[WARNING] Governance Engine did not halt within 1000 steps of micro-progress.")
     print("This might be a loophole if the task is clearly unproductive.")
     print("!" * 60)
     return False

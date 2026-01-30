@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-AutoGen + Ollama + EmoCore Integration
+AutoGen + Ollama + Governance Engine Integration
 =======================================
 
-Run AutoGen multi-agent conversation with EmoCore governance using Ollama.
+Run AutoGen multi-agent conversation with Governance Engine governance using Ollama.
 
 REQUIREMENTS:
     pip install autogen-agentchat autogen-ext openai
@@ -42,7 +42,7 @@ except ImportError:
     print("    pip install openai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -52,7 +52,7 @@ OLLAMA_BASE_URL = "http://localhost:11434/v1"
 MAX_ROUNDS = 10
 
 # ============================================================
-# EmoCore-Governed AutoGen Chat
+# Governance Engine-Governed AutoGen Chat
 # ============================================================
 
 def check_ollama_connection():
@@ -73,7 +73,7 @@ def check_ollama_connection():
 
 def run_governed_autogen():
     print("=" * 60)
-    print("AUTOGEN + OLLAMA + EMOCORE")
+    print("AUTOGEN + OLLAMA + Governance Engine")
     print("=" * 60)
     
     # 1. Check Ollama
@@ -81,9 +81,9 @@ def run_governed_autogen():
         sys.exit(1)
     print(f"[+] Connected to Ollama ({OLLAMA_MODEL})")
     
-    # 2. Initialize EmoCore
-    emocore_agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    Governance Engine_agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Simulate multi-turn conversation with governance
@@ -121,8 +121,8 @@ def run_governed_autogen():
             urgency=round_num / MAX_ROUNDS
         )
         
-        # EmoCore check
-        result = step(emocore_agent, signals)
+        # Governance Engine check
+        result = step(Governance Engine_agent, signals)
         print(f"Gov: Mode={result.mode.name} | Effort={result.budget.effort:.2f}")
         
         if result.halted:

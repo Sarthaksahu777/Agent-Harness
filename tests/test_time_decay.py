@@ -2,11 +2,11 @@ import time
 import os 
 import sys 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.state import ControlState
 
 def test_time_decay_reduces_budget():
-    agent = EmoCoreAgent()
+    agent = GovernanceAgent()
     
     # Needs positive control state to generate positive budget to decay from
     r1 = agent.step(reward=0.0, novelty=1.0, urgency=1.0)
@@ -40,7 +40,7 @@ def test_recovery_happens_over_time():
     """
     from governance.modes import Mode
     
-    core = EmoCoreAgent()
+    core = GovernanceAgent()
     
     # Drive effort down by running multiple steps with zero/negative input
     # This accumulates control loss and reduces effort via governance

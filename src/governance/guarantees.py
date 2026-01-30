@@ -1,4 +1,4 @@
-# emocore/guarantees.py
+# Governance Engine/guarantees.py
 """
 Guarantee enforcement layer for Governance Kernel.
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-AutoGen + OpenAI + EmoCore Integration
+AutoGen + OpenAI + Governance Engine Integration
 =======================================
 
-Run AutoGen multi-agent conversation with EmoCore governance using OpenAI.
+Run AutoGen multi-agent conversation with Governance Engine governance using OpenAI.
 
 REQUIREMENTS:
     pip install autogen-agentchat autogen-ext-models-openai
@@ -36,7 +36,7 @@ except ImportError as e:
     print("\n[+] Install with: pip install openai")
     sys.exit(1)
 
-from governance import EmoCoreAgent, step, Signals
+from governance import GovernanceAgent, step, Signals
 
 # ============================================================
 # Configuration
@@ -45,21 +45,21 @@ OPENAI_MODEL = "gpt-4o-mini"
 MAX_ROUNDS = 10
 
 # ============================================================
-# EmoCore-Governed AutoGen Chat
+# Governance Engine-Governed AutoGen Chat
 # ============================================================
 
 def run_governed_autogen():
     print("=" * 60)
-    print("AUTOGEN + OPENAI + EMOCORE")
+    print("AUTOGEN + OPENAI + Governance Engine")
     print("=" * 60)
     
     # 1. Initialize OpenAI client
     client = OpenAI()
     print(f"[+] Connected to OpenAI ({OPENAI_MODEL})")
     
-    # 2. Initialize EmoCore
-    emocore_agent = EmoCoreAgent()
-    print("[+] EmoCore governance initialized")
+    # 2. Initialize Governance Engine
+    Governance Engine_agent = GovernanceAgent()
+    print("[+] Governance Engine governance initialized")
     print("-" * 60)
     
     # 3. Simulated multi-agent conversation
@@ -91,8 +91,8 @@ def run_governed_autogen():
             urgency=round_num / MAX_ROUNDS
         )
         
-        # EmoCore check
-        result = step(emocore_agent, signals)
+        # Governance Engine check
+        result = step(Governance Engine_agent, signals)
         print(f"Gov: Mode={result.mode.name} | Effort={result.budget.effort:.2f}")
         
         if result.halted:

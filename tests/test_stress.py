@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 
 import pytest
 from governance import (
-    EmoCoreAgent, step, Signals,
+    GovernanceAgent, step, Signals,
     PolicyEngine, PolicyContext, MaxStepsPolicy, MaxTokensPolicy, AllowedToolsPolicy,
     GuardrailStack, PromptInjectionDetector, PIIDetector, CodeExecutionGuard,
     InProcessEnforcer, EnforcementBlocked,
@@ -310,7 +310,7 @@ class TestFullGovernanceLoop:
         assert governor.register_agent("test-agent")
         
         # Simulate agent loop
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         steps = 0
         halted = False
         
@@ -413,7 +413,7 @@ class TestResourceExhaustion:
     
     def test_agent_step_exhaustion(self):
         """Test agent behavior when kernel halts due to exhaustion."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         steps = 0
         for i in range(200):

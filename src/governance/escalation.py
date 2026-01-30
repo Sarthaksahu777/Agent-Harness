@@ -1,4 +1,4 @@
-# emocore/escalation.py
+# Governance Engine/escalation.py
 """
 NOTE:
 This component is downstream of Governance Kernel.

@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.modes import Mode
 from governance.failures import FailureType
 from governance.state import ControlState
@@ -14,7 +14,7 @@ class TestResetFunctionality:
 
     def test_reset_clears_halted_state(self):
         """Agent can be reset after halting."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         # Force exhaustion by running many negative steps
         for _ in range(100):
@@ -34,7 +34,7 @@ class TestResetFunctionality:
         
     def test_reset_restores_full_budget(self):
         """After reset, budget is restored to full capacity."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         # Deplete budget
         for _ in range(50):
@@ -52,7 +52,7 @@ class TestResetFunctionality:
         
     def test_reset_preserves_failure_type_none(self):
         """After reset, failure type is cleared."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         # Force a halt
         for _ in range(100):
@@ -69,7 +69,7 @@ class TestResetFunctionality:
         
     def test_soft_reset_blocked_before_cooldown(self):
         """Reset on non-halted agent before cooldown should raise error."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         # Only 1 step - below cooldown threshold
         result = agent.step(reward=0.5, novelty=0.3, urgency=0.1, difficulty=0.1)
@@ -83,7 +83,7 @@ class TestResetFunctionality:
         
     def test_soft_reset_allowed_after_cooldown(self):
         """Reset on non-halted agent after cooldown should work."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         # Run enough steps to pass cooldown
         for _ in range(6):
@@ -103,7 +103,7 @@ class TestControlLog:
     
     def test_control_log_populated(self):
         """EngineResult includes control_log with all 5 axes."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         result = agent.step(reward=0.5, novelty=0.3, urgency=0.2, difficulty=0.1)
         
@@ -116,7 +116,7 @@ class TestControlLog:
         
     def test_control_log_changes_over_steps(self):
         """Control values should evolve between steps."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         r1 = agent.step(reward=0.5, novelty=0.3, urgency=0.0, difficulty=0.0)
         r2 = agent.step(reward=-0.5, novelty=0.0, urgency=0.5, difficulty=0.5)

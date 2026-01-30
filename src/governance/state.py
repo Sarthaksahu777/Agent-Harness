@@ -1,4 +1,4 @@
-# emocore/state.py
+# Governance Engine/state.py
 """
 ControlState: Canonical internal state representation for governance.
 

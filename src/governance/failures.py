@@ -1,10 +1,10 @@
-# emocore/failures.py
+# Governance Engine/failures.py
 """
-Failure types for EmoCore.
+Failure types for Governance Engine.
 
 FailureType identifies WHY the engine halted. This is diagnostic information,
 not a control signal. Downstream systems may use this for logging, recovery
-decisions, or user feedback, but they must NOT use it to influence EmoCore state.
+decisions, or user feedback, but they must NOT use it to influence Governance Engine state.
 
 Failure types are:
 - NONE: No failure (engine running normally)

@@ -56,8 +56,8 @@ def test_engine_failure_ordering():
     assert res.failure == FailureType.NONE
 
 def test_engine_does_not_mutate_budget():
-    from governance.agent import EmoCoreAgent
-    agent = EmoCoreAgent()
+    from governance.agent import GovernanceAgent
+    agent = GovernanceAgent()
     res1 = agent.step(0, 0, 0)
     res2 = agent.step(0, 0, 0)
 

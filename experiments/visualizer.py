@@ -44,7 +44,7 @@ except ImportError:
     RICH_AVAILABLE = False
     print("Warning: 'rich' library not installed. Install with: pip install rich")
 
-from governance import EmoCoreAgent, step, Signals, PROFILES, ProfileType
+from governance import GovernanceAgent, step, Signals, PROFILES, ProfileType
 from governance.metrics import MetricsCollector, GovernanceMetrics
 from typing import List, Optional
 
@@ -251,7 +251,7 @@ def run_demo():
     print()
     
     # Initialize
-    agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+    agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
     collector = MetricsCollector()
     visualizer = GovernanceVisualizer()
     

@@ -10,7 +10,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 from governance.interface import observe
-from governance.agent import EmoCoreAgent
+from governance.agent import GovernanceAgent
 from governance.observation import Observation
 from governance.modes import Mode
 
@@ -20,7 +20,7 @@ class TestObserveAPI:
 
     def test_observe_success_increases_budget(self):
         """Successful observations should maintain healthy budget."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         obs = Observation(
             action="read_file",
@@ -38,7 +38,7 @@ class TestObserveAPI:
         
     def test_observe_failure_streak_causes_halt(self):
         """Repeated failures should eventually cause a halt."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         obs = Observation(
             action="call_api",
@@ -59,7 +59,7 @@ class TestObserveAPI:
         
     def test_observe_stagnation_causes_halt(self):
         """Stagnation (success with no state change) should cause halt."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         # "Success" but nothing actually changes
         obs = Observation(
@@ -81,7 +81,7 @@ class TestObserveAPI:
         
     def test_observe_returns_control_log(self):
         """Observe should return control log for debugging."""
-        agent = EmoCoreAgent()
+        agent = GovernanceAgent()
         
         obs = Observation(
             action="test",

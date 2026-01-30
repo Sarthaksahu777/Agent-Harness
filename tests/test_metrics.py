@@ -9,7 +9,7 @@ import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 import pytest
-from governance import EmoCoreAgent, step, Signals, PROFILES, ProfileType
+from governance import GovernanceAgent, step, Signals, PROFILES, ProfileType
 from governance.metrics import GovernanceMetrics, MetricsCollector
 
 
@@ -103,7 +103,7 @@ class TestMetricsCollector:
     
     def test_record_metrics(self):
         """record() should capture metrics from EngineResult."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         signals = Signals(reward=0.5, novelty=0.2, urgency=0.3)
@@ -118,7 +118,7 @@ class TestMetricsCollector:
     
     def test_history_accumulates(self):
         """Multiple records should accumulate in history."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         for i in range(5):
@@ -132,7 +132,7 @@ class TestMetricsCollector:
     
     def test_hooks_are_called(self):
         """Hooks should be invoked on each record."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         received = []
@@ -147,7 +147,7 @@ class TestMetricsCollector:
     
     def test_prometheus_export(self):
         """to_prometheus() should produce valid Prometheus format."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         signals = Signals(reward=0.5, novelty=0.2, urgency=0.3)
@@ -163,7 +163,7 @@ class TestMetricsCollector:
     
     def test_jsonl_export(self):
         """to_jsonl() should produce valid JSONL."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         for i in range(3):
@@ -182,7 +182,7 @@ class TestMetricsCollector:
     
     def test_summary(self):
         """summary() should provide aggregate statistics."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         for i in range(10):
@@ -200,7 +200,7 @@ class TestMetricsCollector:
     
     def test_clear(self):
         """clear() should reset history."""
-        agent = EmoCoreAgent(PROFILES[ProfileType.BALANCED])
+        agent = GovernanceAgent(PROFILES[ProfileType.BALANCED])
         collector = MetricsCollector()
         
         signals = Signals(reward=0.5, novelty=0.2, urgency=0.3)

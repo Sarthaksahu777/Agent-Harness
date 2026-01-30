@@ -1,4 +1,4 @@
-# emocore/engine.py
+# Governance Engine/engine.py
 """
 GovernanceEngine: Core governance kernel for bounded agent execution.
 

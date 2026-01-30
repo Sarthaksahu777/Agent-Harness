@@ -26,8 +26,8 @@ class ConstraintEngine:
     """
     ⚠️ DEPRECATED: Do not use.
     
-    This class is broken and violates EmoCore's unbounded state rule.
-    Control values are NOT bounded to [0, 1] in EmoCore.
+    This class is broken and violates Governance Engine's unbounded state rule.
+    Control values are NOT bounded to [0, 1] in Governance Engine.
     
     This module is quarantined and preserved only for reference.
     """
