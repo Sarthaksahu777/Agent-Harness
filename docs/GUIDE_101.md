@@ -825,16 +825,6 @@ result = assistant.initiate_chat(user_proxy, message="...")
 
 MIT License - use freely in production.
 
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-## Community
-
-- Discord: [discord.gg/agentharness](https://discord.gg/agentharness)
-- GitHub: [github.com/agentharness](https://github.com/agentharness)
-- Twitter: [@agentharness](https://twitter.com/agentharness)
-
 ---
 
 **Built on [Governance Engine](https://github.com/Sarthaksahu777/Governance Engine) — the governance engine that makes deterministic halting possible.**
