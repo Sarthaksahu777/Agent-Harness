@@ -37,9 +37,9 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Sarthaksahu777/Emocore"
-"Repository" = "https://github.com/Sarthaksahu777/Emocore"
-"Documentation" = "https://github.com/Sarthaksahu777/Emocore#readme"
+"Homepage" = "https://github.com/Sarthaksahu777/Agent-Harness"
+"Repository" = "https://github.com/Sarthaksahu777/Agent-Harness"
+"Documentation" = "https://github.com/Sarthaksahu777/Agent-Harness#readme"
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "pytest-cov"]
