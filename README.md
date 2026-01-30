@@ -110,8 +110,27 @@ while True:
         print(f"🛑 HALTED: {result.reason}")
         break
 
-    # 5. Proceed safely
+    # 5. Execute action only if allowed
     print(f"✅ GO: Effort Left: {result.budget.effort}")
+```
+
+## Automated Governance (Zero Boilerplate)
+
+Tired of manual signals? Use the `@governed` decorator. It automatically tracks execution time, errors, and output deltas to inform the Governance Engine.
+
+```python
+from governance import GovernanceAgent, governed
+
+agent = GovernanceAgent()
+
+@governed(agent)
+def search_web(query: str):
+    # This call is now automatically observed!
+    # It tracks success, time, and result size.
+    return "Search results for " + query
+
+# The engine now protects this function call.
+search_web("AI Governance")
 ```
 
 ---
@@ -137,4 +156,22 @@ while True:
 The engine generates an immutable audit trail. See [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md) for the full mapping of features to the 15-point regulatory checklist.
 
 ---
+---
 *Stable Release v0.7.0 | agentharnessengine*
+
+## GitHub Description (300 Words)
+
+**Governance Engine** is a deterministic runtime control layer designed for the next generation of autonomous AI systems. While modern LLM agents possess high cognitive capability, they lack structural execution boundaries. They can loop indefinitely, escalate risks recklessly under urgency, and silently consume tokens without making progress. Policies and prompt-based guardrails are insufficient because they operate *inside* the model’s reasoning — Governance Engine operates *outside* the agent loop as a hard execution boundary.
+
+Built on a rigorous 15-point AI governance checklist (referencing World & IBM standards), the engine translates environmental telemetry into a finite **Behavioral Budget**. It maintains internal axes of `Effort`, `Persistence`, `Risk`, and `Exploration`. As an agent encounters sustained difficulty or stagnation, its budget automatically collapses, leading to a terminal, fail-closed **HALT**. This ensures that no system, no matter how powerful the underlying model, can run unbounded.
+
+The Engine is strictly model-agnostic, working seamlessly with LangChain, AutoGen, CrewAI, or custom Python loops. It features an automated **Signal Extraction** layer that detects "Exploration Theater" (fake progress) and "Reasoning Theater" (loops with no external impact). Through its `AuditLogger`, it provides an immutable, append-only ledger of every decision, ensuring full traceability for regulatory compliance.
+
+Key features include:
+- **Deterministic State Machine**: Same inputs always produce the same safety decision.
+- **Fail-Closed Semantics**: Defaults to blocked execution if trust or telemetry is compromised.
+- **Automated Observation**: `@governed` decorators for zero-boilerplate integration.
+- **Multi-Agent Coordination**: `SystemGovernor` handles budget pooling across swarms.
+- **Explainable Failure**: Typed halts (`EXHAUSTION`, `OVERRISK`, `STAGNATION`) with human-readable audit trails.
+
+**Governance Engine** transforms agent execution from "run until killed" to a permissioned, audited, and safe autonomous process.

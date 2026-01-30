@@ -12,6 +12,7 @@ Usage:
 """
 
 from governance.agent import GovernanceAgent
+from governance.auto import governed
 from governance.interface import step, observe, Signals
 from governance.observation import Observation
 from governance.adapters import LLMLoopAdapter, ToolCallingAgentAdapter
@@ -45,6 +46,7 @@ __all__ = [
     # Main API
     "GovernanceAgent",
     "EmoCoreAgent",  # Alias
+    "governed",
     "step",
     "observe",
     "Signals",

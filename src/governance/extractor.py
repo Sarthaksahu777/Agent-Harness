@@ -207,19 +207,36 @@ class RuleBasedExtractor(SignalExtractor):
         return min(1.0, self.current_difficulty)
 
     def _update_trust(self, obs: Observation, state_delta: float) -> None:
-        # Trust Logic
-        
-        # Decay if result is success but state didn't change (fake success)
+        """
+        Anti-Gaming Trust Logic.
+        Hardens the system against 'fake success' and 'yapping' (reasoning theater).
+        """
+        # A-1: Fake Success Detection
+        # If the agent claims success but the environment didn't move
         if obs.result == 'success' and state_delta < self.progress_threshold:
+            # Aggressive decay: 15% drop per fake success
             self.signal_trust *= 0.85
+            self.stagnation_counter += 1 # Treat as stealth stagnation
             
-        # Decay if result is failure but agent claims high internal change (spinning wheels)
-        if obs.result == 'failure' and obs.agent_state_delta > 0.8:
+        # A-2: Reasoning Theater Detection
+        # High internal activity (agent_delta) with zero external impact (env_delta)
+        if obs.agent_state_delta > 0.7 and obs.env_state_delta < 0.05:
+            # Moderate decay: 10% drop per yapping step
             self.signal_trust *= 0.9
             
-        # Recover slowly on consistent behavior (success + state change)
-        if obs.result == 'success' and state_delta > self.progress_threshold:
-            self.signal_trust = min(1.0, self.signal_trust + 0.05)
+        # A-3: Action-Result Inconsistency
+        # If the agent repeats the exact same action and state delta is 0
+        if len(self.action_history) > 1 and obs.action == self.action_history[-2] and state_delta < 0.01:
+            self.signal_trust *= 0.95 # Small penalty for spinning
+            
+        # A-4: Recovery (Slow and Earned)
+        # Trust only recovers on 'True Success' (success + tangible state change)
+        if obs.result == 'success' and state_delta >= self.progress_threshold:
+            # Linear recovery is harder than multiplicative decay
+            self.signal_trust = min(1.0, self.signal_trust + 0.02)
+        
+        # Clamp to floor (System should never fully trust once burned)
+        self.signal_trust = max(0.1, self.signal_trust)
 
     def _compute_state_hash(self, obs: Observation) -> int:
         """
