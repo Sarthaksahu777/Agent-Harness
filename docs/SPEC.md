@@ -244,6 +244,16 @@ This system:
 
 ---
 
+## Observability Contract
+
+> **CRITICAL**: Governance correctness depends **only** on the Kernel, Enforcement, and Audit. Metrics, dashboards, and live servers are optional observers and must never affect execution.
+
+1.  **Non-Authoritative**: Dashboards are downstream consumers. They can fail without impacting safety.
+2.  **Offline-First**: Audit trails and local logs are the source of truth, not mutable time-series databases.
+3.  **No Feedback Loop**: The Kernel never reads from the metrics system.
+
+---
+
 ## Minimal Conformance Checklist
 
 A system claiming to be an Agent Harness must answer YES to all:

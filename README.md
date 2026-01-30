@@ -238,4 +238,35 @@ kernel = GovernanceKernel(profile)
 
 ---
 
+## Observability Contract (Offline-First)
+
+> **CRITICAL**: Governance correctness depends **only** on the Kernel, Enforcement, and Audit log. Metrics and dashboards are optional observers and must never affect execution.
+
+### 1. Offline & Local Metrics
+The system writes metrics to a local append-only file (`metrics.jsonl`), ensuring observability even without Prometheus/Grafana.
+
+```python
+from governance.local_metrics import LocalMetricsSink
+
+# Non-blocking, fault-tolerant local sink
+sink = LocalMetricsSink("metrics.jsonl")
+sink.record(step=1, effort=0.8, risk=0.1)
+```
+
+### 2. Offline Audit Replay
+Verify governance integrity and reconstruct timelines without any running services:
+
+```bash
+# Verify hash chain integrity
+python tools/replay_audit.py --verify audit_chain.jsonl
+
+# Replay timeline
+python tools/replay_audit.py audit_chain.jsonl
+```
+
+### 3. Optional Live Views
+Prometheus and Grafana are treated as **consumers**, not dependencies. If they crash, the agent continues to run safely, and the local audit trail remains the source of truth.
+
+---
+
 *Stable Release v1.0.0 | agentharnessengine*
