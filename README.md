@@ -1,79 +1,80 @@
-# Governance
+# Governance Engine
 
 ![PyPI version](https://img.shields.io/pypi/v/agentharnessengine)
 ![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
 
-**Governance** is a rigorous engineering kernel for AI agents. It enforces the "World & IBM" 15-point checklist for safe, deterministic, and bounded autonomous systems. 
+**Governance Engine** (`agentharnessengine`) is a rigorous engineering kernel for AI agents. It enforces the "World & IBM" 15-point checklist for safe, deterministic, and bounded autonomous systems.
 
-It sits between your agent's brain and its hands, translating abstract signals (reward, novelty, urgency) into hard execution boundaries.
+It sits between your agent's reasoning loop and its execution layer, translating abstract signals—reward, novelty, urgency—into hard execution boundaries.
 
 ---
 
-## The 15-Point Governance Checklist
+## Table of Contents
+- [Why Governance Engine?](#why-governance-engine)
+- [The 15-Point Checklist](#the-15-point-checklist)
+- [How It Works (Mental Model)](#how-it-works-mental-model)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [API Reference](#api-reference)
+- [Compliance & Auditability](#compliance--auditability)
 
-This package solves the "Unbounded Behavior" problem by default.
+---
 
-### 1. Unbounded Behavior
-> “We cannot allow systems that run indefinitely.”
-- **Solution**: `governance` strictly ties execution to a finite budget (`effort`, `persistence`). When budget reaches zero, the agent **HALTS**. No infinite loops, no endless retries.
+## Why Governance Engine?
 
-### 2. Runtime Control
-> “Policies written before deployment don’t matter at runtime.”
-- **Solution**: Dynamic `step()` evaluation updates control state *during* execution. If `risk` spikes or `progress` stalls, the kernel intervenes immediately, overriding the agent's intent.
+Autonomous agents fail when they become **unbounded**. Policy-level guards (prompts, RLHF) are insufficient because they can be bypassed or ignored by the model at runtime. 
 
-### 3. Deterministic Behavior
-> “We need predictable outcomes, not vibes.”
-- **Solution**: The kernel is a deterministic state machine. Same signal sequence $\rightarrow$ Same internal state $\rightarrow$ Same halt decision. Zero stochasticity in enforcement.
+The Governance Engine provides a **runtime execution boundary** that guarantees:
+- **Finite Halting**: Agents cannot run forever.
+- **Fail-Closed Safety**: When telemetry is lost or trust is low, the system blocks.
+- **Deterministic Control**: The same signal history always results in the same halt decision.
 
-### 4. Explainable Halting
-> “If it stops, we must know why.”
-- **Solution**: Every halt returns a precise `FailureType` (`EXHAUSTION`, `STAGNATION`, `OVERRISK`, `SAFETY`) and a human-readable reason string.
+---
 
-### 5. Fail-Closed Semantics
-> “When something goes wrong, stop — don’t guess.”
-- **Solution**: If telemetry is missing or trust is low, the kernel defaults to safety. Once halted, the system remains halted (terminal state) until explicit manual reset.
+## The 15-Point Checklist
 
-### 6. Physical Enforcement
-> “Advisory systems are not governance.”
-- **Solution**: The `InProcessEnforcer` (and future proxy/sidecar patterns) physically blocks tool execution when the kernel halts. It raises `EnforcementBlocked`, preventing the action from occurring.
+This engine is the reference implementation for the 15 core principles of AI governance:
 
-### 7. Auditability & Traceability
-> “Show us exactly what happened.”
-- **Solution**: `AuditLogger` records an immutable, append-only ledger of every step, signal, budget state, and decision.
+| Principle | Execution-Layer Solution |
+| :--- | :--- |
+| **1. Unbounded Behavior** | `Effort` budgeting: reaches 0 $\rightarrow$ System **HALTS**. |
+| **2. Runtime Control** | Dynamic `step()` loop intervenes mid-execution. |
+| **3. Determinism** | Fixed-matrix state machine logic (no randomness). |
+| **4. Explainability** | Halts return typed reasons (`EXHAUSTION`, `STAGNATION`). |
+| **5. Fail-Closed** | Default-blocked state if trust signal is low. |
+| **6. Physical Enforcement** | Interceptor pattern physically blocks tool calls. |
+| **7. Auditability** | Append-only, immutable `AuditLogger`. |
+| **8. Accountability** | Decisions linked to agent identity and step index. |
+| **9. Risk Containment** | Explicit `Risk` budget with hard saturation caps. |
+| **10. Stagnation Detection** | Detects "looping" behavior where effort > reward. |
+| **11. Telemetry Resilience** | `Trust` signal dampens rewards but passes risks. |
+| **12. Model Agnostic** | Works with LangChain, AutoGen, CrewAI, etc. |
+| **13. Human Override** | `reset()` is a privileged, manual-only operation. |
+| **14. Compliance Ready** | Generates standardized `trace.json` compliance logs. |
+| **15. Scalability** | `SystemGovernor` coordinates multi-agent budgets. |
 
-### 8. Accountability Attribution
-> “Who authorized this action?”
-- **Solution**: Every decision is cryptographically linked to a specific step and agent identity in the audit log.
+---
 
-### 9. Risk Containment
-> “The system must not escalate itself.”
-- **Solution**: Explicit `risk` budget. As urgency scales, risk tolerance may increase slightly, but hard caps (`max_risk`) prevent catastrophic escalation.
+## How It Works (Mental Model)
 
-### 10. Progress vs Activity Discrimination
-> “Busy ≠ productive.”
-- **Solution**: The `stagnation_window` detects "spinning" (actions with low reward). It depletes `effort` rapidly when an agent is active but ineffective.
+The engine maintains a set of **unbounded pressures** (Frustration, Urgency) and translates them into **bounded budgets** (Effort, Persistence).
 
-### 11. Resilience to Bad Telemetry
-> “If sensors lie, slow down.”
-- **Solution**: The `trust` signal dampens positive inputs (reward/novelty) validation but passes negative inputs (difficulty/urgency) fully. Noisy data leads to conservative behavior.
+```text
+  Signals (Reward, Novelty, Urgency, Trust)
+      │
+      ▼
+[ Governance Kernel ] ──▶ Audit Log
+      │
+      ▼
+ Decision (HALT / GO)
+      │
+      ▼
+  Enforcement (Blocks Tools)
+```
 
-### 12. Model-Agnosticism
-> “We will swap models constantly.”
-- **Solution**: Works with **LangChain**, **AutoGen**, **CrewAI**, or raw loops. It checks *signals*, not prompts or model weights.
-
-### 13. Human Override & Recovery
-> “Humans must remain the final authority.”
-- **Solution**: `reset()` is a privileged operation. The system cannot restart itself; a human (or supervisor process) must authorize a new budget.
-
-### 14. Compliance Readiness
-> “We don’t want to rebuild this for every law.”
-- **Solution**: Generates standardized JSON artifacts (`trace.json`) suitable for regulatory introspection.
-
-### 15. Scalability Across Agent Systems
-> “This won’t be one agent.”
-- **Solution**: `SystemGovernor` manages shared budget pools across swarms, detecting cascades and ensuring no single agent hogs resources.
+**Key Invariant**: Pressure can grow forever. Permission cannot. Under sustained stress or non-progress, permission **always collapses**, forcing a terminal halt.
 
 ---
 
@@ -83,63 +84,57 @@ This package solves the "Unbounded Behavior" problem by default.
 pip install agentharnessengine
 ```
 
-*(Note: Requires Python 3.10+)*
+*Requires Python 3.10+*
 
 ---
 
 ## Quick Start
 
 ```python
-from governance import GovernanceKernel, step, Signals
+from governance import GovernanceKernel, Signals, step
 
-# 1. Initialize the Kernel
+# 1. Initialize
 kernel = GovernanceKernel()
 
-# 2. Run your agent loop
+# 2. In your agent loop
 while True:
-    # ... Agent thinks and chooses an action ...
-    
-    # 3. Feed signals to Governance
-    #    reward: 0.0-1.0 (Did we make progress?)
-    #    novelty: 0.0-1.0 (Is this new info?)
-    #    urgency: 0.0-1.0 (Are we out of time?)
-    result = step(kernel, Signals(reward=0.5, novelty=0.1, urgency=0.0))
-    
-    # 4. ENFORCE
+    # 3. Feed signals to the engine
+    result = step(kernel, Signals(
+        reward=0.1,    # Low progress
+        novelty=0.0,   # No new info
+        urgency=0.2    # Slight pressure
+    ))
+
+    # 4. Check decision
     if result.halted:
-        print(f"🛑 HALTED: {result.failure} - {result.reason}")
+        print(f"🛑 HALTED: {result.reason}")
         break
-        
-    # 5. Execute action only if allowed
-    print(f"✅ GO: Effort={result.budget.effort:.2f}")
+
+    # 5. Proceed safely
+    print(f"✅ GO: Effort Left: {result.budget.effort}")
 ```
 
-## How It Works
+---
 
-**Pressure** (unbounded, accumulates) $\rightarrow$ **Budget** (bounded [0,1], generally decreases).
+## API Reference
 
-- **Effort**: Fuel. Burns with time and activity.
-- **Risk**: Thermometer. Freezes actions when too hot.
-- **Persistence**: Grip strength. How long to try before giving up.
-- **Exploration**: Leash length. How far to stray for new info.
+### Signals
+- `reward`: Progress towards goal [0, 1].
+- `novelty`: Discovery of new info [0, 1].
+- `urgency`: Pressure to complete [0, 1].
+- `trust`: Credibility of signal sources [0, 1].
 
-Unlike RL or policies, **Governance** is not trying to maximize reward. It is trying to **guarantee limits**.
+### Control Axes
+- **Effort**: The system's fuel.
+- **Risk**: Saturation of unsafe actions.
+- **Persistence**: Wille to continue through failure.
+- **Exploration**: Capacity for novelty pursuit.
 
-## Architecture
+---
 
-```text
-Environment (Signals)
-      │
-      ▼
-[Governance Kernel] ──▶ Audit Log
-      │
-      ▼
- Decision (Halt/Go)
-      │
-      ▼
-  Enforcement
-```
+## Compliance & Auditability
 
-## License
+The engine generates an immutable audit trail. See [`docs/COMPLIANCE.md`](docs/COMPLIANCE.md) for the full mapping of features to the 15-point regulatory checklist.
 
-MIT
+---
+*Stable Release v0.7.0 | agentharnessengine*
