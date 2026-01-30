@@ -10,7 +10,7 @@
 2. [What is an Agent Harness?](#what-is-an-agent-harness)
 3. [Core Guarantees](#core-guarantees)
 4. [How It Works](#how-it-works)
-5. [EmoCore: The Governance Engine](#emocore-the-governance-engine)
+5. [Governance Engine: The Governance Engine](#Governance Engine-the-governance-engine)
 6. [What's Missing (The 80% Gap)](#whats-missing-the-80-gap)
 7. [Real-World Problems It Solves](#real-world-problems-it-solves)
 8. [Implementation Roadmap](#implementation-roadmap)
@@ -293,11 +293,11 @@ POST /tool/send_email → Harness checks → Tool executes
 
 ---
 
-## EmoCore: The Governance Engine
+## Governance Engine: The Governance Engine
 
-**EmoCore is the research engine that powers the harness.**
+**Governance Engine is the research engine that powers the harness.**
 
-### What EmoCore Provides
+### What Governance Engine Provides
 
 ✅ Multi-dimensional budget system (effort, persistence, risk, exploration)  
 ✅ Pressure accumulation dynamics  
@@ -327,15 +327,15 @@ Represents stress            Represent permission
 
 **Mathematical guarantee:** Finite-time halting under sustained stress.
 
-### What EmoCore Is
+### What Governance Engine Is
 
 ```
-EmoCore = Evaluator + Budgets + Signals + Failure Taxonomy
+Governance Engine = Evaluator + Budgets + Signals + Failure Taxonomy
 ```
 
 **It's the "brain" of the harness.**
 
-### What EmoCore Is NOT
+### What Governance Engine Is NOT
 
 ❌ An enforcement layer  
 ❌ An audit trail  
@@ -343,13 +343,13 @@ EmoCore = Evaluator + Budgets + Signals + Failure Taxonomy
 ❌ Observable/instrumented  
 ❌ Production-ready infrastructure  
 
-**EmoCore is necessary but not sufficient.**
+**Governance Engine is necessary but not sufficient.**
 
 ---
 
 ## What's Missing (The 80% Gap)
 
-EmoCore is 20% of a complete Agent Harness. Here's the other 80%:
+Governance Engine is 20% of a complete Agent Harness. Here's the other 80%:
 
 ### Tier 1: CRITICAL (No Enterprise Without These)
 
@@ -601,7 +601,7 @@ Regulator: "Show us the logs"
 │  ┌───────────┐  ┌───────────┐          │
 │  │Governance │  │  Policy   │          │
 │  │ Engine    │  │  Engine   │          │
-│  │(EmoCore)  │  │           │          │
+│  │(Governance Engine)  │  │           │          │
 │  └───────────┘  └───────────┘          │
 │  ┌───────────┐  ┌───────────┐          │
 │  │  Audit    │  │  Metrics  │          │
@@ -837,4 +837,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ---
 
-**Built on [EmoCore](https://github.com/Sarthaksahu777/Emocore) — the governance engine that makes deterministic halting possible.**
+**Built on [Governance Engine](https://github.com/Sarthaksahu777/Governance Engine) — the governance engine that makes deterministic halting possible.**

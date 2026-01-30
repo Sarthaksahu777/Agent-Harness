@@ -1,6 +1,6 @@
 # The Full Agent Harness Infrastructure (Roadmap)
 
-## Current State: What EmoCore Already Has
+## Current State: What Governance Engine Already Has
 
 ✅ **Governance Core Engine**
 *   Multi-dimensional budgets (effort, persistence, risk, exploration)

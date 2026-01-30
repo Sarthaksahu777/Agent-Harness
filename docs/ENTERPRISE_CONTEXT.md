@@ -28,7 +28,7 @@ Once a company routes all tool calls through AgentGuard:
 ## Revenue Model (With Full Stack)
 
 ### **Open Source Core**
-- Governance engine (EmoCore logic)
+- Governance engine (Governance Engine logic)
 - Basic enforcement (HTTP proxy)
 - Community support
 
@@ -56,11 +56,11 @@ This is achievable within 18 months if you execute.
 
 ---
 
-## 🔗 Mapping EmoCore Internals → RFC Sections
+## 🔗 Mapping Governance Engine Internals → RFC Sections
 
-Below, each EmoCore component is mapped to the exact section of the RFC where it belongs and how it fulfills the requirement.
+Below, each Governance Engine component is mapped to the exact section of the RFC where it belongs and how it fulfills the requirement.
 
-### EmoCore Core Logic
+### Governance Engine Core Logic
 
 **What it is:**
 Your research engine that tracks budgets and pressure, and halts deterministically.
@@ -68,34 +68,34 @@ Your research engine that tracks budgets and pressure, and halts deterministical
 **RFC Mapping:**
 
 **📌 Section 4: Core Guarantees**
-EmoCore already enforces finite execution, fail-closed halts, and deterministic governance. These are the foundational guarantees the RFC mandates. Including typed halting fits Section 10: Failure Taxonomy.
+Governance Engine already enforces finite execution, fail-closed halts, and deterministic governance. These are the foundational guarantees the RFC mandates. Including typed halting fits Section 10: Failure Taxonomy.
 
 **📌 Section 7: Signals**
-EmoCore’s internal pressure/pressure dynamics (e.g., frustration, persistence) are observations of execution state that correspond exactly to the RFC’s “Signals.” Those signals feed budget depletions and decision logic.
+Governance Engine’s internal pressure/pressure dynamics (e.g., frustration, persistence) are observations of execution state that correspond exactly to the RFC’s “Signals.” Those signals feed budget depletions and decision logic.
 
 **📌 Section 8: Budgets**
-EmoCore’s budget infrastructure (effort, persistence, risk, exploration) is the Budget system required by the RFC.
+Governance Engine’s budget infrastructure (effort, persistence, risk, exploration) is the Budget system required by the RFC.
 
 **📌 Section 9: Evaluator**
-EmoCore’s deterministic halt logic is an evaluator: it observes signals, checks budgets, and outputs a decision. This matches RFC’s Evaluator definition as a pure, deterministic function.
+Governance Engine’s deterministic halt logic is an evaluator: it observes signals, checks budgets, and outputs a decision. This matches RFC’s Evaluator definition as a pure, deterministic function.
 
 **Summary:**
-Your EmoCore engine satisfies ~60–70% of the RFC core spec:
+Your Governance Engine engine satisfies ~60–70% of the RFC core spec:
 - Evaluator logic? Yes.
 - Budgets? Yes.
 - Typed failures? Yes.
 - Deterministic outcomes? Yes.
 - Model-agnostic? Yes.
 
-But by itself, EmoCore does not enforce control outside the agent and does not provide auditability. That’s exactly why the RFC needs enforcement and trace.
+But by itself, Governance Engine does not enforce control outside the agent and does not provide auditability. That’s exactly why the RFC needs enforcement and trace.
 
 ---
 
-### What EmoCore Doesn’t Provide Yet
+### What Governance Engine Doesn’t Provide Yet
 
 These are gaps relative to the RFC:
 
-| RFC Requirement | EmoCore Status | Comment |
+| RFC Requirement | Governance Engine Status | Comment |
 | :--- | :--- | :--- |
 | External Enforcement | ❌ | In-process logic is bypassable by the agent |
 | Audit & Trace | ❌ | No standardized trace capture or immutable log |
@@ -198,10 +198,10 @@ Those are strategic capabilities in IBM’s vision — deeper than pure executio
 
 ## 🧠 Summary
 
-**EmoCore → RFC Mapping:**
-- EmoCore evaluator → §9 Evaluator
-- EmoCore budgets → §8 Budgets
-- EmoCore signals → §7 Signals
+**Governance Engine → RFC Mapping:**
+- Governance Engine evaluator → §9 Evaluator
+- Governance Engine budgets → §8 Budgets
+- Governance Engine signals → §7 Signals
 - Typed halts → §10 Failure Taxonomy
 
 Everything else (enforcement, audit, trace, boundaries) remains to be done but is exactly where your system should build next.

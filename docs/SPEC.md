@@ -174,26 +174,26 @@ Enforcement levels:
 
 ---
 
-## EmoCore’s Role
+## Governance Engine’s Role
 
-EmoCore is the governance engine inside the harness.
+Governance Engine is the governance engine inside the harness.
 
-### EmoCore Provides
+### Governance Engine Provides
 *   Signal → budget dynamics
 *   Pressure accumulation
 *   Deterministic halt logic
 *   Typed failure taxonomy
 *   Formal halting guarantees
 
-### EmoCore Does NOT Provide
+### Governance Engine Does NOT Provide
 *   Enforcement
 *   Observability stack
 *   Audit storage
 *   Compliance reporting
 *   Framework integrations
 
-> EmoCore ≠ Agent Harness
-> EmoCore is the engine, not the system.
+> Governance Engine ≠ Agent Harness
+> Governance Engine is the engine, not the system.
 
 ---
 

@@ -81,7 +81,7 @@ Maps business/legal constraints into constraints the harness enforces, such as:
 
 ## 🧠 Failure Modes & Definitions
 
-(Built on EmoCore taxonomy)
+(Built on Governance Engine taxonomy)
 
 | Failure Mode | Meaning | Example Intervention |
 | :--- | :--- | :--- |
