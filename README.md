@@ -91,10 +91,10 @@ pip install agentharnessengine
 ## Quick Start
 
 ```python
-from governance import GovernanceKernel, Signals, step
+from governance import GovernanceAgent, Signals, step
 
 # 1. Initialize
-kernel = GovernanceKernel()
+kernel = GovernanceAgent()
 
 # 2. In your agent loop
 while True:

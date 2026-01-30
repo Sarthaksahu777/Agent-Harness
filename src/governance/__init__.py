@@ -44,7 +44,7 @@ PressureState = ControlState
 __all__ = [
     # Main API
     "GovernanceAgent",
-    "GovernanceAgent",  # Alias
+    "EmoCoreAgent",  # Alias
     "step",
     "observe",
     "Signals",
