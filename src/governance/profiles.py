@@ -52,6 +52,7 @@ class Profile:
     stagnation_effort_floor: float = 0.0
     stagnation_effort_scale: float = 1.0
     stagnation_persistence_scale: float = 1.0
+    progress_threshold: float = 0.05
 
 
 # =========================

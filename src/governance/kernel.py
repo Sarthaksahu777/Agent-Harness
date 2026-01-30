@@ -37,7 +37,7 @@ from governance.modes import Mode
 from governance.result import EngineResult
 
 
-class GovernanceEngine:
+class GovernanceKernel:
     """
     Core governance kernel that enforces bounded execution through control dynamics.
     
@@ -161,8 +161,13 @@ class GovernanceEngine:
         #    BOUNDARY: Engine DETECTS stagnation.
         #    BudgetComputer RESPONDS to stagnation.
         #    Profiles TUNE the response.
+        #    Drift Protection: Filter micro-progress < threshold
         # --------------------------------------------------
-        if reward <= 0.0:
+        effective_reward = reward
+        if 0.0 < reward < self.profile.progress_threshold:
+            effective_reward = 0.0
+            
+        if effective_reward <= 0.0:
             self.no_progress_steps += 1
         else:
             self.no_progress_steps = 0
@@ -173,10 +178,11 @@ class GovernanceEngine:
         # 2. Signal Evaluation → Control state accumulation
         # --------------------------------------------------
         delta = self.evaluator.compute(
-            reward=reward,
+            reward=effective_reward,
             novelty=novelty,
             urgency=urgency,
             difficulty=difficulty,
+            trust=trust,
         )
         self.state = self.state.integrate(delta)
 
@@ -384,5 +390,6 @@ class GovernanceEngine:
         # the agent a fresh budget to DEAL with that state, not amnesia.
 
 
-# Backward compatibility alias (deprecated)
-EmoEngine = GovernanceEngine
+# Backward compatibility aliases
+GovernanceEngine = GovernanceKernel
+EmoEngine = GovernanceKernel

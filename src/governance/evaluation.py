@@ -62,16 +62,24 @@ class SignalEvaluator:
         d = stimulus.get("difficulty", 0.0)
         p = stimulus.get("progress", 0.0)
         u = stimulus.get("urgency", 0.0)
+        t = stimulus.get("trust", 1.0)
+        
+        # Trust-Gating (Hardening)
+        # We dampen positive signals (progress, novelty) by trust.
+        # We DO NOT dampen negative signals (difficulty, urgency) to ensure fail-closed behavior.
+        p_effective = p * t
+        n_effective = n * t
+        
         deltas = {
-            "control_margin": (p * 0.3) - (d * 0.1),
-            "control_loss": (0.0 if p > 0 else d * 0.4) + (u * 0.2),
-            "exploration_pressure": (n * 0.5) - ((1.0 - n) * 0.2),
+            "control_margin": (p_effective * 0.3) - (d * 0.1),
+            "control_loss": (0.0 if p_effective > 0 else d * 0.4) + (u * 0.2),
+            "exploration_pressure": (n_effective * 0.5) - ((1.0 - n_effective) * 0.2),
             "urgency_level": u * 0.6,
-            "risk": -abs(p) * 0.3,
+            "risk": -abs(p_effective) * 0.3,
         }
         return deltas
 
-    def compute(self, reward: float, novelty: float, urgency: float, difficulty: float = 0.1) -> ControlState:
+    def compute(self, reward: float, novelty: float, urgency: float, difficulty: float = 0.1, trust: float = 1.0) -> ControlState:
         """
         Compute control state delta from engine signals.
         
@@ -94,6 +102,7 @@ class SignalEvaluator:
             "novelty": novelty,
             "urgency": urgency,
             "difficulty": difficulty,
+            "trust": trust,
         }
         deltas = self.evaluate(stimulus)
         return ControlState(

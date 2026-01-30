@@ -77,6 +77,50 @@ Agent Harness comes with built-in adapters for popular frameworks in `integratio
 - **CrewAI**
 - **OpenAI SDK**
 
+
+## Enforcement (v0 Reference)
+
+The package includes a reference `InProcessEnforcer`. This wraps function calls to physically block execution when the kernel halts.
+
+> **Note**: This in-process enforcer is for testing and single-process agents. For production security, use a future Proxy/Sidecar implementation.
+
+```python
+from governance.enforcement import InProcessEnforcer, EnforcementBlocked
+
+enforcer = InProcessEnforcer()
+
+# In your agent loop:
+try:
+    # Action will ONLY run if decision.halted is False
+    result = enforcer.enforce(decision, my_tool_function, arg1)
+except EnforcementBlocked as e:
+    print(f"Blocked: {e.halt_reason}")
+```
+
+## Audit System
+
+The `AuditLogger` provides an immutable, append-only record of every governance decision.
+
+```python
+from governance.audit import AuditLogger
+
+logger = AuditLogger()
+
+# Log before enforcement
+logger.log(
+    step=1,
+    action="tool_call",
+    params={"x": 1},
+    signals=signals.__dict__,
+    result=decision
+)
+
+# Export trace
+logger.dump_json("conformance_trace.json")
+```
+
 ## License
 
 MIT
+
+
