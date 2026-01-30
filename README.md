@@ -1,6 +1,6 @@
 # Governance
 
-![PyPI version](https://img.shields.io/pypi/v/governance)
+![PyPI version](https://img.shields.io/pypi/v/agentharnessengine)
 ![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -80,7 +80,7 @@ This package solves the "Unbounded Behavior" problem by default.
 ## Installation
 
 ```bash
-pip install governance
+pip install agentharnessengine
 ```
 
 *(Note: Requires Python 3.10+)*
