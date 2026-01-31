@@ -41,35 +41,40 @@ The following critical features have been implemented in v1.0:
 
 ---
 
-## 🛠️ Tier 2: Operational (Future)
+## ✅ V1.1 Multi-Agent Core (COMPLETED)
 
-### 6. S3 Root-of-Trust
-- [ ] Automatically export signed logs to secure, immutable S3 buckets.
-- [ ] Compliance Report Generator for ISO/EU AI Act filing.
+**Objective:** Govern agent swarms and automate signal tracking.
 
-### 7. Policy Validator
-- [ ] Check for conflicting policies before agent execution.
-- [ ] Static analysis of policy configurations.
+### 6. Shared Budget Pools ✓
+- [x] **System Governor**: Implemented `SystemGovernor` for cross-process coordination (`src/governance/coordination.py`).
+- [x] **Resource Pooling**: Multiple agents draw from shared `Effort` and `Risk` budgets.
+- [x] **Cascade Prevention**: `CascadeDetector` prevents "contagion" failures between interacting agents.
 
----
+### 7. Auto-Signal Extraction ✓
+- [x] **@governed Decorator**: Automatically tracks execution time, errors, and output deltas (`src/governance/auto.py`).
+- [x] **Zero Boilerplate**: Extract signals without manual calculation.
 
-## 🐝 Tier 3: Scalability (Multi-Agent Swarms)
-
-### 8. Shared Budget Pools
-**Objective:** Govern agent swarms as a single unit.
-- [ ] Allow multiple agents to draw from a shared `Effort` or `Risk` budget.
-- [ ] Implement `SystemGovernor` for cross-process coordination.
-
-### 9. Cascade Prevention
-**Objective:** Stop failure "contagion" between interacting agents.
-- [ ] Detect when one agent's halt should trigger a preventative halt in its neighbor.
+### 8. Demonstrations ✓
+- [x] **Catastrophic Failure Demo**: `examples/demo_v1_hardening.py` proves the harness stops runaway agents.
 
 ---
 
-## 📜 Regulatory Certification Toolkit
-- [ ] **Compliance Report Generator**: Automatically summarize audit trails for ISO/EU AI Act filing.
-- [ ] **Harness Stress-Testing Suite**: Tools to prove the harness stops random/adversarial actors.
+## 🔮 V2.0 Enterprise Compliance (FUTURE)
+
+**Objective:** Regulatory certification and cloud-native root of trust.
+
+### 9. S3 Root-of-Trust
+- [ ] **Cloud Persistence**: Automatically export signed logs to secure, immutable S3 buckets.
+- [ ] **Tamper-Proof Storage**: Use AWS Object Lock / WORM compliance.
+
+### 10. Compliance Reporting
+- [ ] **Report Generator**: Automatically summarize audit trails for ISO/EU AI Act filing.
+- [ ] **Incident Post-Mortems**: Generate readable PDFs from halt events.
+
+### 11. Advanced Policy Validation
+- [ ] **Conflict Detection**: Check for conflicting policies before agent execution.
+- [ ] **Static Analysis**: Verify policies against organizational safety constraints.
 
 ---
 
-*Status: V1 Hardening Complete. Core Engine stable at v1.0.0.*
+*Status: V1.1 Released. Core Engine stable. Focus shifting to V2.0 Compliance features.*
