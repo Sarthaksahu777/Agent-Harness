@@ -10,7 +10,7 @@ from governance.state import ControlState
 
 
 class TestResetFunctionality:
-    """Tests for v0.7 reset() method."""
+    """Tests for v1.0 reset() method."""
 
     def test_reset_clears_halted_state(self):
         """Agent can be reset after halting."""
@@ -99,7 +99,7 @@ class TestResetFunctionality:
 
 
 class TestControlLog:
-    """Tests for v0.7 control_log observability."""
+    """Tests for v1.0 control_log observability."""
     
     def test_control_log_populated(self):
         """EngineResult includes control_log with all 5 axes."""
