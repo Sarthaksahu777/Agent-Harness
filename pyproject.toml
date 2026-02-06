@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agentharnessengine"
-version = "1.0.0"
+version = "1.1.0"
 description = "A runtime governance layer that enforces hard behavioral bounds in autonomous agents."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -16,7 +16,7 @@ license = { text = "MIT" }
 authors = [
   { name = "Sarthaksahu777" }
 ]
-# No runtime dependencies for v1.0.0 — intentionally empty
+# No runtime dependencies for v1.1.0 — intentionally empty
 dependencies = ["numpy", "fastapi", "uvicorn[standard]", "pyyaml"]
 
 keywords = ["agents", "runtime", "governance", "control", "AI", "LLM", "safety"]

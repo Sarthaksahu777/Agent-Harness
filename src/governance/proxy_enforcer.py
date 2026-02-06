@@ -242,7 +242,7 @@ def create_app(
     app = FastAPI(
         title="Governance Proxy Enforcer",
         description="Network-level governance enforcement for agent tool calls",
-        version="1.0.0",
+        version="1.1.0",
     )
     
     # Add fail-closed middleware
@@ -349,7 +349,7 @@ def create_app(
     @app.get("/health")
     async def health_check():
         """Health check endpoint."""
-        return {"status": "healthy", "version": "1.0.0"}
+        return {"status": "healthy", "version": "1.1.0"}
     
     @app.get("/audit")
     async def get_audit():

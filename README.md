@@ -159,7 +159,7 @@ The engine generates an immutable audit trail. See [`docs/COMPLIANCE.md`](docs/C
 
 ## V1 Hardening Features
 
-Version 1.0 introduces enterprise-grade hardening for production deployments:
+Version 1.1 introduces enterprise-grade hardening for production deployments:
 
 ### 🔒 Proxy Enforcement Layer
 
@@ -269,4 +269,4 @@ Prometheus and Grafana are treated as **consumers**, not dependencies. If they c
 
 ---
 
-*Stable Release v1.0.0 | agentharnessengine*
+*Stable Release v1.1.0 | agentharnessengine*
