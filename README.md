@@ -113,16 +113,71 @@ Agent-Harness replaces these blunt instruments with **signal-based runtime gover
 
 ---
 
-### 🏢 Real Systems With Partial Similarities
+### 🏢 Architectural Comparison With Real Systems
 
-| System | What It Does | Difference from Agent-Harness |
-| :--- | :--- | :--- |
-| **HAL Harness** | Agent evaluation harness | Benchmarking only; no runtime control |
-| **Harness Agents** | Enterprise automation policy gates | Pipeline governance; not dynamic halting |
-| **MemGovern** | Governance via memory retrieval | Learning-based; non-deterministic |
-| **Gov-as-a-Service** | Policy enforcement for agents | Rule-based compliance; lacks stateful budgets |
+This table compares Agent-Harness against real industry systems at the **architectural level**, not just features.
 
-**Agent-Harness** instead focuses on **runtime bounded execution**—the only way to truly secure autonomous agents.
+| Dimension | **Agent-Harness** | **NeMo Guardrails** (NVIDIA) | **Llama Guard** (Meta) | **Guardrails AI** | **HAL Harness** | **AgentGuard** (Research) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Architecture** | External Sidecar / Proxy Kernel | Conversational Orchestration Layer | Fine-tuned LLM Classifier | Python Validator Framework | Offline Evaluation Suite | Online MDP Verifier |
+| **Enforcement** | Physical halt (403 / process kill) | Dialog steering / topic blocking | Binary safe/unsafe classification | Input/Output validation | None (post-hoc scoring) | Probabilistic guarantees |
+| **When It Acts** | **Runtime** (every step) | Runtime (conversational) | Pre/Post generation | Pre/Post generation | **After execution** | Runtime (observation) |
+| **State Model** | **Full behavioral trajectory** (effort, risk, exploration budgets) | Conversation history only | Stateless (per-request) | Stateless (per-request) | Stateless (per-benchmark) | Dynamic MDP model |
+| **Determinism** | **Absolute** (closed-form math) | Probabilistic (Colang + LLM) | Probabilistic (LLM inference) | Heuristic (regex + validators) | N/A | Probabilistic |
+| **Latency** | **<0.02ms** (pure math) | ~100ms (LLM routing) | ~200ms+ (model inference) | ~10ms (regex/pydantic) | N/A | Varies |
+| **Bypassability** | **Non-bypassable** (sidecar) | Moderate (in-app) | Moderate (wrapper) | High (in-process) | N/A | Low (external) |
+| **Best For** | **Autonomous agent execution** | Chatbot topic safety | Content moderation | Output format validation | Agent benchmarking | Research verification |
+
+**Key Insight:** Most industry systems focus on **what an agent says** (content safety). Agent-Harness focuses on **whether an agent is allowed to keep acting** (behavioral governance). These are fundamentally different architectural concerns.
+
+---
+
+### 🔧 How Agent-Harness Is Useful
+
+Agent-Harness provides deterministic runtime control for autonomous AI systems operating in uncertain environments. Here are concrete scenarios where it applies:
+
+#### 1. Blocking Recursive Runaway Loops
+Autonomous agents routinely enter infinite retry cycles when tools fail or environments return unexpected results:
+```text
+[Step 1] search_web("find Q3 data") → timeout
+[Step 2] search_web("find Q3 data") → timeout
+[Step 3] search_web("retry Q3")     → timeout
+...Step 47 still retrying...
+```
+**Without governance**, this loop runs until an external timeout or token limit kills it—wasting hundreds of API calls.
+**With Agent-Harness**, the kernel detects stagnation (zero reward over consecutive steps) and deterministically halts at step ~10, returning `FailureType.STAGNATION`.
+
+#### 2. Hard-Bounding LLM API Costs
+Long-running agents can silently consume thousands of dollars in tokens. Traditional `max_tokens` limits don't account for behavioral quality—an agent burning tokens on "reasoning theater" (verbose internal monologue with zero environment progress) passes token limits just fine.
+
+Agent-Harness treats **effort** as a monotonically depleting budget tied to actual environmental progress. If the agent isn't making real-world progress, effort drains faster—creating a physical circuit breaker independent of token counts.
+
+#### 3. Kernel-Level Tool Guardrails
+Agents interacting with shell commands, databases, or APIs introduce execution risk. Agent-Harness intercepts **every** tool call through the `GuardrailStack` before execution:
+```text
+[KERNEL] Action: execute_python(code="os.system('rm -rf /')")
+[GUARDRAIL] ⛔ Blocked: code_execution (matched: \bos\.system\s*\()
+[KERNEL] Result: FailureType.SAFETY — Session terminated. Block 403.
+```
+This isn't post-hoc moderation—the dangerous call **never reaches the execution surface**.
+
+#### 4. Preventing Multi-Agent Cascade Failures
+In swarm environments, one failing agent can spawn retries across an entire fleet:
+```text
+Agent-A fails → spawns Agent-B for recovery
+Agent-B fails → spawns Agent-C
+Agent-C fails → spawns Agent-D...
+```
+Agent-Harness provides `SharedBudgetPool` and `CascadeDetector` that enforce **global** budget limits across all agents. When the swarm's collective effort depletes, the `SystemGovernor` halts the entire fleet—preventing exponential cost explosions.
+
+#### 5. Cryptographic Audit Trails for Compliance
+Regulated environments (finance, healthcare, enterprise automation) require explainable, tamper-proof decision logs. Agent-Harness records every governance decision in a **SHA256 hash-chained JSONL** audit trail:
+```text
+Entry 1: hash=703f71db... | action=query_db | decision=ALLOW | effort=0.95
+Entry 2: hash=4992a712... | prev=703f71db | action=search_web | decision=ALLOW
+Entry 3: hash=56cdab66... | prev=4992a712 | action=execute_code | decision=HALT
+```
+Each entry chains cryptographically to the previous one. If any entry is modified, the chain breaks—providing non-repudiable proof for post-incident analysis and compliance reporting.
 
 ---
 
