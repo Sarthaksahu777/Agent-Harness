@@ -431,14 +431,6 @@ python scripts/replay_audit.py verify audit_chain.jsonl
 
 ---
 
-## ⚖️ License
-
-**Agent-Harness** is released under the [MIT License](LICENSE). 
-
-Built with 🛡️ by Sarthaksahu777.
-
----
-
 ## 🗺️ Roadmap
 
 - **LLM-assisted Semantic Guardrails**: Moving beyond regex into fast, quantized models evaluating signal context natively.
