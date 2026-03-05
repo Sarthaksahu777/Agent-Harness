@@ -37,39 +37,25 @@ Autonomous agents rely on "soft" boundaries (prompt engineering, RLHF). Under su
 
 ---
 
-## 💎 Why Agent-Harness? Determinism vs. Industry
+## 💎 Why Agent-Harness?
 
 Most AI safety solutions are **probabilistic** (LLM validation) or **stateless** (regex). Agent-Harness introduces **Stateful Determinism**—enforcing physical runtime bounds that an agent cannot reason its way out of.
 
-### 📊 Agent Governance Comparison
+### 🏢 How Agent-Harness Compares
 
-| Dimension | **Agent-Harness** | Industry Standard (Typical) | Examples |
-| :--- | :--- | :--- | :--- |
-| **Core Goal** | Deterministic runtime governance and halting | Orchestrate agent workflows | LangGraph, CrewAI |
-| **Control Layer** | **External execution governor** | Internal framework logic | LangChain, AutoGen |
-| **Halting Logic** | **Dynamic signals** (effort, risk, stagnation) | Static limits (max steps, timeout) | `max_iterations`, `timeout` |
-| **Failure Handling** | **Fail-closed deterministic halt** | Retry / timeout / fallback | API retry logic |
-| **Loop Awareness** | Observes step-by-step runtime signals | Blind to runtime dynamics | Prompt → tool → response |
-| **Governance Loc.** | **Outside the reasoning system** | Embedded inside agent loop | Typical agent frameworks |
-| **Model Dependency** | **Model-agnostic** | Often tied to framework/model | OpenAI Agents SDK |
-| **Observability** | Governance metrics (halt reason, pressure) | Logging and tracing only | LangSmith, Arize Phoenix |
-| **Stability** | Designed to prevent runaway loops | Usually handled manually | Ad-hoc guards |
-| **Philosophy** | **Collapse over escalation** | Graceful degradation | Retries |
-| **Determinism** | **Deterministic decision logic** | Mostly probabilistic behavior | LLM reasoning |
-| **Integration Role** | Governance wrapper around agents | Full agent framework | AutoGen, CrewAI |
+| Capability | **Agent-Harness** | NeMo Guardrails | Llama Guard | Guardrails AI | LangChain Limits |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Stops a runaway agent mid-loop** | ✅ | ❌ | ❌ | ❌ | ⚠️ `max_iterations` only |
+| **Agent cannot bypass it** | ✅ External sidecar | ⚠️ In-app | ⚠️ Wrapper | ❌ In-process | ❌ In-framework |
+| **Detects stagnation (busy ≠ productive)** | ✅ Signal-based | ❌ | ❌ | ❌ | ❌ |
+| **Blocks dangerous tool calls before execution** | ✅ Guardrail stack | ⚠️ Dialog-level | ❌ Text only | ✅ Validators | ❌ |
+| **Works without an LLM in the safety path** | ✅ Pure math | ❌ Uses LLM | ❌ Is an LLM | ⚠️ Some regex | ✅ |
+| **Cryptographic audit trail** | ✅ SHA256 chain | ❌ | ❌ | ❌ | ❌ |
+| **Multi-agent budget coordination** | ✅ SharedBudgetPool | ❌ | ❌ | ❌ | ❌ |
+| **Same input → same decision, always** | ✅ Deterministic | ❌ Probabilistic | ❌ Probabilistic | ⚠️ Heuristic | ✅ Static |
+| **Works across any LLM vendor** | ✅ | ⚠️ NVIDIA stack | ⚠️ Meta models | ✅ | ⚠️ LangChain only |
 
-### 🏢 Architectural Comparison With Real Systems
-
-| System | Architecture | Enforcement | Determinism | Best For |
-| :--- | :--- | :--- | :--- | :--- |
-| **Agent-Harness** | External Sidecar / Proxy Kernel | Physical halt (403 / kill) | **Absolute** (closed-form math) | **Autonomous agent execution** |
-| **NeMo Guardrails** (NVIDIA) | Conversational Orchestration | Dialog steering / topic blocking | Probabilistic (Colang + LLM) | Chatbot topic safety |
-| **Llama Guard** (Meta) | Fine-tuned LLM Classifier | Binary safe/unsafe classification | Probabilistic (LLM inference) | Content moderation |
-| **Guardrails AI** | Python Validator Framework | Input/Output validation | Heuristic (regex + validators) | Output format validation |
-| **HAL Harness** | Offline Evaluation Suite | None (post-hoc scoring) | N/A | Agent benchmarking |
-| **AgentGuard** (Research) | Online MDP Verifier | Probabilistic guarantees | Probabilistic | Research verification |
-
-**Key Insight:** Most industry systems focus on **what an agent says** (content safety). Agent-Harness focuses on **whether an agent is allowed to keep acting** (behavioral governance).
+**Key difference:** Other systems ask *"is this output safe?"* — Agent-Harness asks *"should this agent still be allowed to act?"*
 
 ---
 
