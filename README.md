@@ -86,7 +86,7 @@ This table compares Agent-Harness against real industry systems at the **archite
 | **When It Acts** | **Runtime** (every step) | Runtime (conversational) | Pre/Post generation | Pre/Post generation | **After execution** | Runtime (observation) |
 | **State Model** | **Full behavioral trajectory** (effort, risk, exploration budgets) | Conversation history only | Stateless (per-request) | Stateless (per-request) | Stateless (per-benchmark) | Dynamic MDP model |
 | **Determinism** | **Absolute** (closed-form math) | Probabilistic (Colang + LLM) | Probabilistic (LLM inference) | Heuristic (regex + validators) | N/A | Probabilistic |
-| **Latency** | **<0.02ms** (pure math) | ~100ms (LLM routing) | ~200ms+ (model inference) | ~10ms (regex/pydantic) | N/A | Varies |
+| **Latency** | **~0.06ms** (pure math) | ~100ms (LLM routing) | ~200ms+ (model inference) | ~10ms (regex/pydantic) | N/A | Varies |
 | **Bypassability** | **Non-bypassable** (sidecar) | Moderate (in-app) | Moderate (wrapper) | High (in-process) | N/A | Low (external) |
 | **Best For** | **Autonomous agent execution** | Chatbot topic safety | Content moderation | Output format validation | Agent benchmarking | Research verification |
 
@@ -325,14 +325,15 @@ Agent-Harness/
 
 ## ⚡ Performance & Efficiency
 
-Agent-Harness is designed for high-frequency runtime interception with near-zero overhead.
+Agent-Harness is designed for high-frequency runtime interception with near-zero overhead. Values below are from a real benchmark of 10,000 `kernel.step()` calls on commodity hardware.
 
-| Metric | Value | Description |
+| Metric | Value | Notes |
 | :--- | :--- | :--- |
-| **Step Latency** | **< 0.02ms** | Verified full kernel evaluation (signal processing + budget update). |
-| **Proxy Overhead** | **< 1.5ms** | Round-trip interception including pydantic validation and audit logging. |
-| **Memory Footprint** | ~12MB | Core engine footprint (excluding host environment). |
-| **Throughput** | 100k+ req/s | Handles massive agent swarms on standard commodity hardware. |
+| **Step Latency (Median)** | **~0.06ms** | Full kernel evaluation (signal processing + budget update). |
+| **Step Latency (P99)** | **~0.23ms** | Worst-case tail latency under sustained load. |
+| **Guardrail Check (Median)** | **~0.07ms** | Full `GuardrailStack.check_all()` with 3 detectors. |
+| **Throughput** | **~13k step()/sec** | Single-threaded on standard hardware. |
+| **Memory (Kernel Delta)** | **~2 KB** | Kernel + internal state after 100 steps (excludes Python runtime). |
 
 ---
 
