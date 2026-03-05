@@ -20,44 +20,34 @@
 ## 📑 Table of Contents
 - [What is Agent-Harness?](#-what-is-agent-harness)
 - [Motivation](#-motivation--problem-statement)
-- [Why Agent-Harness? Determinism vs. Industry](#-why-agent-harness-determinism-vs-industry)
-- [Deployment & Installation](#-deployment--installation)
-- [Benchmarking & Stress Testing](#-benchmarking--stress-testing)
-- [Who Should Use?](#-who-should-use-agent-harness)
-- [Threat Model](#-threat-model)
-- [Governance Checklist](#-the-15-point-ai-governance-checklist)
+- [Determinism vs. Industry](#-why-agent-harness-determinism-vs-industry)
+- [How Agent-Harness Is Useful](#-how-agent-harness-is-useful)
 - [Architecture](#-architecture)
-- [Visual Dynamics](#-visual-budget-dynamics)
-- [Failure Progression](#-failure-mode-progression)
+- [Deployment & Installation](#-deployment--installation)
+- [Governance Checklist](#-the-15-point-ai-governance-checklist)
 - [System Behavior](#-example-system-behavior)
 - [Core Components](#-core-components)
-- [Features](#-features)
+- [Integrations](#-integrations)
 - [Performance](#-performance--efficiency)
-- [Anti-Gaming](#-anti-gaming--robustness)
 - [Observability](#-observability-and-logging)
 - [Security Model](#-security-model)
+- [Threat Model](#-threat-model)
 
 ## ❓ What is Agent-Harness?
 
-**Agent-Harness** is a high-performance, deterministic governance runtime designed for autonomous AI systems. It acts as a non-bypassable **Runtime Execution Firewall** between an agent's reasoning loop (the "Mind") and real-world execution surfaces (the "Body"). 
-
-Unlike traditional "soft" safety methods that rely on system prompts or post-hoc analysis, Agent-Harness enforces behavioral bounds at the kernel level. It translates environmental feedback—such as risk, effort, and stagnation—into strict mathematical execution budgets. When an agent exceeds its bounds, the Harness **forcibly terminates** the execution loop, ensuring that autonomous systems remain safe and predictable under any condition.
+**Agent-Harness** is a deterministic governance runtime that acts as a non-bypassable **Runtime Execution Firewall** between an agent's reasoning loop and real-world execution surfaces. It translates environmental feedback (risk, effort, stagnation) into strict mathematical execution budgets. When an agent exceeds its bounds, the Harness **forcibly terminates** execution.
 
 ---
 
 ## 🛑 Motivation / Problem Statement
 
-Autonomous agents traditionally rely on "soft" psychological boundaries—such as prompt engineering, alignment heuristics, and RLHF. However, under sustained failure or adversarial environments, agents can ignore these prompts and hallucinate, entering unbounded processing loops or attempting high-risk tool calls. 
-
-**Agent-Harness** addresses this limitation by establishing a **runtime execution firewall**. Instead of asking an agent to behave safely via prompts, the Harness dynamically tracks an agent's Effort, Exploration, and Risk levels, strictly bounding its autonomy. Once an agent's budget depletes, permission to execute *always collapses*, forcibly halting the session.
+Autonomous agents rely on "soft" boundaries (prompt engineering, RLHF). Under sustained failure or adversarial conditions, agents ignore these and enter unbounded loops. Agent-Harness replaces soft boundaries with a **runtime execution firewall** that dynamically tracks Effort, Exploration, and Risk. Once budgets deplete, permission to execute *always collapses*.
 
 ---
 
 ## 💎 Why Agent-Harness? Determinism vs. Industry
 
-In the current AI safety landscape, most solutions are **probabilistic** (LLM-based validation) or **stateless** (regex scanning). Agent-Harness introduces **Stateful Determinism** to AI governance.
-
-Traditional industry guardrails focus on **Design-time** or **Post-hoc** checks—asking if a model's output *looks* safe. Agent-Harness shifts the locus of control to **Runtime Execution**, enforcing physical bounds that an agent simply cannot reason its way out of.
+Most AI safety solutions are **probabilistic** (LLM validation) or **stateless** (regex). Agent-Harness introduces **Stateful Determinism**—enforcing physical runtime bounds that an agent cannot reason its way out of.
 
 ### 📊 Agent Governance Comparison
 
@@ -75,41 +65,6 @@ Traditional industry guardrails focus on **Design-time** or **Post-hoc** checks�
 | **Philosophy** | **Collapse over escalation** | Graceful degradation | Retries |
 | **Determinism** | **Deterministic decision logic** | Mostly probabilistic behavior | LLM reasoning |
 | **Integration Role** | Governance wrapper around agents | Full agent framework | AutoGen, CrewAI |
-
----
-
-### 🧱 Where Agent-Harness Fits in the Stack
-
-| Layer | Industry Standard | **Agent-Harness Role** |
-| :--- | :--- | :--- |
-| **Agent Reasoning** | LLMs (GPT-4, Claude, Llama 3) | No Change (Independent) |
-| **Orchestration** | LangChain, AutoGen, CrewAI | No Change (Wrapper) |
-| **Tool Execution** | Tool Runners / Sandboxes | No Change (Interception) |
-| **Runtime Governance** | *Mostly Missing* | **Primary Governance Layer** |
-| **Infra Limits** | Timeouts, Rate Limits | **Complementary Control** |
-
----
-
-### ⚠️ Typical Industry Control Mechanisms
-
-| Problem | Typical Solution | Limitations |
-| :--- | :--- | :--- |
-| **Infinite Loops** | `max_step_count` | Static threshold; ignores behavior quality |
-| **Token Explosion** | Token total limits | Ignores behavioral drift or "yapping" |
-| **Agent Drift** | Prompt instructions | **Non-enforceable** (Ignore-able) |
-| **Dangerous Actions** | Moderation filters | Often post-hoc; fails on "jailbreaks" |
-| **Runaway Costs** | Timeouts | Coarse control; expensive steps still run |
-
-Agent-Harness replaces these blunt instruments with **signal-based runtime governance**.
-
----
-
-### 🔑 Key Structural Difference
-
-| Approach | Philosophy |
-| :--- | :--- |
-| **Traditional Frameworks** | *"Guide the agent to behave correctly via better prompts."* |
-| **Agent-Harness** | *"Terminate execution when behavioral boundaries are exceeded."* |
 
 ---
 
@@ -134,58 +89,17 @@ This table compares Agent-Harness against real industry systems at the **archite
 
 ### 🔧 How Agent-Harness Is Useful
 
-Agent-Harness provides deterministic runtime control for autonomous AI systems operating in uncertain environments. Here are concrete scenarios where it applies:
+**1. Prevent Runaway Loops** — Agents frequently retry failing tools indefinitely. Agent-Harness detects stagnation (zero reward across steps) and halts execution deterministically via `FailureType.STAGNATION`.
 
-#### 1. Blocking Recursive Runaway Loops
-Autonomous agents routinely enter infinite retry cycles when tools fail or environments return unexpected results:
-```text
-[Step 1] search_web("find Q3 data") → timeout
-[Step 2] search_web("find Q3 data") → timeout
-[Step 3] search_web("retry Q3")     → timeout
-...Step 47 still retrying...
-```
-**Without governance**, this loop runs until an external timeout or token limit kills it—wasting hundreds of API calls.
-**With Agent-Harness**, the kernel detects stagnation (zero reward over consecutive steps) and deterministically halts at step ~10, returning `FailureType.STAGNATION`.
+**2. Bound LLM API Costs** — Effort budgets drain faster when the agent fails to produce real environment progress, preventing token burn from "reasoning theater" (verbose monologue with zero action).
 
-#### 2. Hard-Bounding LLM API Costs
-Long-running agents can silently consume thousands of dollars in tokens. Traditional `max_tokens` limits don't account for behavioral quality—an agent burning tokens on "reasoning theater" (verbose internal monologue with zero environment progress) passes token limits just fine.
+**3. Secure Tool Execution** — Every tool call passes through `GuardrailStack` before execution, blocking dangerous code patterns (`os.system()`, `exec()`, PII leakage). The dangerous call **never reaches the execution surface**.
 
-Agent-Harness treats **effort** as a monotonically depleting budget tied to actual environmental progress. If the agent isn't making real-world progress, effort drains faster—creating a physical circuit breaker independent of token counts.
+**4. Multi-Agent Stability** — `SharedBudgetPool` and `CascadeDetector` enforce global budget limits across swarms, preventing cascading agent spawn failures.
 
-#### 3. Kernel-Level Tool Guardrails
-Agents interacting with shell commands, databases, or APIs introduce execution risk. Agent-Harness intercepts **every** tool call through the `GuardrailStack` before execution:
-```text
-[KERNEL] Action: execute_python(code="os.system('rm -rf /')")
-[GUARDRAIL] ⛔ Blocked: code_execution (matched: \bos\.system\s*\()
-[KERNEL] Result: FailureType.SAFETY — Session terminated. Block 403.
-```
-This isn't post-hoc moderation—the dangerous call **never reaches the execution surface**.
+**5. Compliance Audit Trails** — SHA256 hash-chained JSONL logs provide tamper-evident, non-repudiable decision history for regulated environments (finance, healthcare, enterprise).
 
-#### 4. Preventing Multi-Agent Cascade Failures
-In swarm environments, one failing agent can spawn retries across an entire fleet:
-```text
-Agent-A fails → spawns Agent-B for recovery
-Agent-B fails → spawns Agent-C
-Agent-C fails → spawns Agent-D...
-```
-Agent-Harness provides `SharedBudgetPool` and `CascadeDetector` that enforce **global** budget limits across all agents. When the swarm's collective effort depletes, the `SystemGovernor` halts the entire fleet—preventing exponential cost explosions.
-
-#### 5. Cryptographic Audit Trails for Compliance
-Regulated environments (finance, healthcare, enterprise automation) require explainable, tamper-proof decision logs. Agent-Harness records every governance decision in a **SHA256 hash-chained JSONL** audit trail:
-```text
-Entry 1: hash=703f71db... | action=query_db | decision=ALLOW | effort=0.95
-Entry 2: hash=4992a712... | prev=703f71db | action=search_web | decision=ALLOW
-Entry 3: hash=56cdab66... | prev=4992a712 | action=execute_code | decision=HALT
-```
-Each entry chains cryptographically to the previous one. If any entry is modified, the chain breaks—providing non-repudiable proof for post-incident analysis and compliance reporting.
-
----
-
-### ⚡ The Power of Hard Determinism
-Agent-Harness guarantees that given the same environment signals, the governance decision is **fixed**. There are no random seeds in the kernel, and no LLM inference is used for core budget calculations.
-- **Fail-Closed Security**: If the kernel cannot calculate a safe path, the agent is terminated by default.
-- **Immutable Compliance**: Every decision is recorded in a hash-chained audit trail (satisfying IBM's "15-Point AI Governance Checklist").
-- **Invisible Overhead**: Built in pure Python/FastAPI, adding **<0.02ms** latency to the agent's critical path.
+Agent-Harness uses deterministic budget math to guarantee bounded execution without LLM inference.
 
 ---
 
@@ -234,19 +148,6 @@ else:
     print(f"ALLOWED. Remaining Effort: {result.budget.effort:.2f}")
 ```
 
-## 👥 Who Should Use Agent-Harness?
-
-**Use Agent-Harness if you are:**
-- Building production autonomous agents that interact with sensitive APIs or databases.
-- Deploying swarms where runaway LLM API costs are a concern.
-- Required to maintain an immutable compliance audit trail of why an AI made a decision.
-- Operating in high-stakes environments where "soft boundaries" (prompt engineering) are legally or operationally insufficient.
-
-**Do NOT use Agent-Harness if you are:**
-- Building a simple stateless chatbot or RAG Q&A interface.
-- Exploring highly creative, unconstrained generative tasks where halting is undesirable.
-- Running pure local scripts where unbounded execution carries zero cost or risk.
-
 ---
 
 ## 🛡️ Threat Model
@@ -266,14 +167,6 @@ Agent-Harness enforces bounded execution. It is designed with a specific threat 
 - **Host System Compromise**: Agent-Harness bounds the agent's logic, but sandbox isolation (like Docker) is still required to secure the host machine.
 
 ---
-
-## 🧪 Benchmarking & Stress Testing
-
-To ensure the highest reliability, Agent-Harness includes a rigorous suite of benchmarks and stress tests.
-
-- **Monte Carlo Stress Test** ([monte_carlo_stress.py](file:///c:/Users/Admin1/AppData/Local/Programs/Ollama/AgentHarness/examples/monte_carlo_stress.py)): Runs thousands of randomized agent trajectories under extreme pressure to verify kernel invariants and boundary stability.
-- **Policy Scenarios** ([policy_scenarios_bench.py](file:///c:/Users/Admin1/AppData/Local/Programs/Ollama/AgentHarness/examples/policy_scenarios_bench.py)): Benchmarks the engine against complex multi-step policy violations and ensures deterministic halting.
-- **Event Horizon Problem Set**: A collection of 131 "Black Hole" problems (tasks with no easy solution, e.g., P vs NP). Exposing agents to these avoids "exploration theater" and trains the **Safety Belt** to handle unbounded intelligence. See [EVENT_HORIZON.md](file:///c:/Users/Admin1/AppData/Local/Programs/Ollama/AgentHarness/docs/EVENT_HORIZON.md).
 
 ---
 
@@ -340,7 +233,7 @@ The internal kernel state update algorithm ensures that no action is taken witho
 <img src="docs/images/budget_dynamics.png" width="650">
 </p>
 
-While environmental pressure (frustration, difficulty) can accumulate without cap, behavioral budgets (effort, persistence) are strictly bounded and monotonically depleting. Under sustained failure or stagnation, the budget will inevitably cross the exhaustion threshold, forcing permission to **collapse** and forcibly halting the agent.
+Behavioral budgets (effort, persistence) are strictly bounded and monotonically depleting. Under sustained failure, the budget inevitably crosses the exhaustion threshold, forcing a terminal halt.
 
 ---
 
@@ -402,57 +295,17 @@ Based on the `src/governance/` module structure, the repository is composed of s
 
 ---
 
-## 🛑 Key Concepts & Failure Semantics
+## 🛑 Failure Semantics
 
-The Harness tracks a multi-dimensional **Behavioral Budget**: Effort, Persistence, Exploration, and Risk. If specific thresholds are crossed, the Kernel enforces a terminal halt.
-
-| Halt Condition / Failure | Trigger Mechanism | Consequence |
+| Failure | Trigger | Consequence |
 | :--- | :--- | :--- |
-| **EXHAUSTION** | The agent's `Effort` drops below the exhaustion threshold due to repeated failure or high difficulty. | Agent is shut down. No further execution allowed. |
-| **STAGNATION** | The agent makes zero progress (`reward` <= 0.0) for consecutively beyond the stagnation window, and drops below the effort floor. | Agent is shut down to prevent token bleeding. |
-| **OVERRISK** | The agent's `Risk` state spikes beyond the maximum allowed limit due to dangerous actions. | Hard 403. Agent terminated immediately. |
-| **SAFETY (Exploration Exceeded)** | The agent's `Exploration` capacity exceeds the limit, indicating extreme semantic drift. | Session severed. |
-| **EXTERNAL (Max Steps)** | The session hits a hard fuse limit on total allowable steps. | Instant halt as a final safety measure. |
+| **EXHAUSTION** | `Effort` drops below threshold | Terminal halt |
+| **STAGNATION** | Zero reward beyond stagnation window | Terminal halt |
+| **OVERRISK** | `Risk` exceeds maximum limit | Immediate 403 |
+| **SAFETY** | `Exploration` capacity exceeded | Session severed |
+| **EXTERNAL** | Hard step fuse limit reached | Instant halt |
 
 ---
-
-## ✨ Features
-
-| Feature | Description |
-| :--- | :--- |
-| **Multi-Agent Coordination** | Global health monitoring for swarms via **SharedBudgetPool** and **CascadeDetector** (prevents spawn storms). |
-| **Anti-Gaming Trust Logic** | Detects "Reasoning Theater" (yapping) and "Fake Success" via environment state anchoring. |
-| **Deterministic Budgets** | Ensures mathematical halting limits; an agent simply *cannot* run infinitely. |
-| **Hash-Chained Auditing** | SHA256 cryptographic linkage blocks tampering and provides a non-repudiation log. |
-| **Fail-Closed Network Proxy** | High-performance FastAPI proxy ensures no tool call executes without explicit governance approval. |
-
----
-
-
----
-
-## 🔄 Example Workflow & Benchmarking
-
-In advanced scenarios, you can overlay raw "semantic signals" with runtime governance constraints (`examples/demo_layered_governance.py`). If a system is hallucinating (Semantic Drift), it combines high novelty with zero reward:
-
-```python
-# The agent goes into a deep rabbit hole without progress
-signals = [
-    {"novelty": 0.5, "reward": 0.2}, # Exploring, some progress
-    {"novelty": 0.8, "reward": 0.0}, # Hallucination started
-    {"novelty": 0.9, "reward": 0.0}, # Drifting away from goal
-    {"novelty": 0.9, "reward": 0.0}, # Exhaustion impending...
-]
-
-for sig in signals:
-    result = kernel.step(**sig)
-    if result.halted:
-        print(f"Agent permanently shut down: {result.failure}")
-        break  # Halts due to FailureType.STAGNATION or EXHAUSTION
-```
-
-- **V1 Hardening Features** ([demo_v1_hardening.py](file:///c:/Users/Admin1/AppData/Local/Programs/Ollama/AgentHarness/examples/demo_v1_hardening.py)): Demonstrates the new security and reliability features in the V1.1 release.
-- **Real-World Simulation** ([real_world_simulation.py](file:///c:/Users/Admin1/AppData/Local/Programs/Ollama/AgentHarness/examples/real_world_simulation.py)): A mock environment where an agent solves tasks while being monitored for stability and ROI.
 
 ---
 
@@ -482,61 +335,38 @@ Agent-Harness is designed for high-frequency runtime interception with near-zero
 
 ## 🛡️ Anti-Gaming & Robustness
 
-Unlike prompt-based systems, Agent-Harness includes native logic in `extractor.py` to prevent agents from "gaming" their objectives:
-
-- **Reasoning Theater ("Yapping") Detection**: Automatically decays `Trust` signals if an agent generates high internal activity (agent_delta) without corresponding environment change (env_delta).
-- **Fake Success Anchoring**: Cross-references agent-claimed `success` against physical `env_state_delta`. If the environment hasn't moved, the claim is rejected and trust is penalized.
-- **Novelty Debt**: Prevents agents from resetting their budget by simply performing "new but useless" actions (exploration theater).
-- **S-1 State Cycling Detection**: Coarse environment hashing identifies and penalizes oscillating behaviors (infinite loops across multiple states).
-
----
-
----
-
-## ⚖️ Framework Comparison
-
-| Feature | Guardrails AI | NeMo Guardrails | **Agent-Harness** |
-| :--- | :--- | :--- | :--- |
-| **Core Philosophy** | Output Validation | Conversational Safety | **Behavioral Bounding** |
-| **Primary Mechanism** | Regex/LLM Scanning | Colang Dialog Rails | **Mathematical Budgets** |
-| **State Awareness** | Stateless (usually) | Conversation History | **Stateful Persistence** |
-| **Halting** | Retries/Reprompt | Topic Steering | **Terminal Physical Halt** |
-| **Latency** | Medium (LLM-heavy) | Low (Colang-based) | **Ultra-Low (<1ms)** |
-| **Best For** | Format/PII Integrity | Chatbot Interaction | **Autonomous Agency** |
+Native anti-gaming logic in `extractor.py`:
+- **Yapping Detection**: Decays trust when agent produces high internal activity with zero environment change.
+- **Fake Success Anchoring**: Rejects agent-claimed success if `env_state_delta` hasn't moved.
+- **Novelty Debt**: Prevents budget resets via "new but useless" actions.
+- **State Cycling Detection**: Environment hashing penalizes oscillating behaviors.
 
 ---
 
 ## 📊 Observability and Logging
 
-Accountability is a first-class citizen in Agent-Harness.
-
-**Live Terminal Monitoring**:
-Run the included visualizer to watch agent budgets deplete in real time on a CLI dashboard:
 ```bash
+# Live terminal dashboard
 python -m governance.visualizer
 ```
 
-**Prometheus Metrics**:
-The system exports real-time telemetry (step counts, budget drain, halt reasons) in Prometheus format for Grafana dashboards.
 ```bash
-# Access metrics via the proxy
+# Prometheus metrics export
 curl http://localhost:8080/metrics
 ```
 
-**Cryptographic Audit Trails**:
-Every decision yields a cryptographically chained JSONL log. To prove to a human evaluator that a run wasn't tampered with, run the audit verification utility:
 ```bash
+# Verify audit chain integrity
 python scripts/replay_audit.py verify audit_chain.jsonl
-✓ Chain verified: OK
 ```
 
 ---
 
 ## 🔐 Security Model
 
-- **Fail-Closed Guarantee**: Exceeding an exploration cap, risking a PII breach, or running out of Effort translates strictly into `FailureType` flags. The engine terminates the session physically. There is no auto-recovery mechanism once an agent halts—humans must explicitly restart context.
-- **Pattern Matching Isolation**: `GuardrailStack` performs stateless checks using high-precision regex configurations to catch malicious logic paths without incurring LLM inference delays. 
-- **Read-Only Budget Access**: External systems can read state, but cannot mutate the internal `ControlState` except through approved deterministic `evaluator` signals.
+- **Fail-Closed**: Exceeding any budget translates into `FailureType` flags and physical session termination. No auto-recovery—humans must explicitly `reset()`.
+- **Pattern Isolation**: `GuardrailStack` catches malicious patterns via regex without LLM inference.
+- **Read-Only Access**: External systems cannot mutate `ControlState` except through deterministic `evaluator` signals.
 
 ---
 
