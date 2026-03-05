@@ -22,16 +22,25 @@
 - [Motivation](#-motivation--problem-statement)
 - [Determinism vs. Industry](#-why-agent-harness-determinism-vs-industry)
 - [How Agent-Harness Is Useful](#-how-agent-harness-is-useful)
-- [Architecture](#-architecture)
 - [Deployment & Installation](#-deployment--installation)
-- [Governance Checklist](#-the-15-point-ai-governance-checklist)
+- [Architecture](#-architecture)
+- [Visual Budget Dynamics](#-visual-budget-dynamics)
+- [Failure Mode Progression](#-failure-mode-progression)
 - [System Behavior](#-example-system-behavior)
 - [Core Components](#-core-components)
+- [Governance Checklist](#-the-15-point-ai-governance-checklist)
+- [Failure Semantics](#-failure-semantics)
 - [Integrations](#-integrations)
+- [Project Structure](#-project-structure)
 - [Performance](#-performance--efficiency)
+- [Anti-Gaming](#-anti-gaming--robustness)
 - [Observability](#-observability-and-logging)
 - [Security Model](#-security-model)
 - [Threat Model](#-threat-model)
+- [Limitations](#-limitations)
+- [Roadmap](#-roadmap)
+
+---
 
 ## ❓ What is Agent-Harness?
 
@@ -66,8 +75,6 @@ Most AI safety solutions are **probabilistic** (LLM validation) or **stateless**
 | **Determinism** | **Deterministic decision logic** | Mostly probabilistic behavior | LLM reasoning |
 | **Integration Role** | Governance wrapper around agents | Full agent framework | AutoGen, CrewAI |
 
----
-
 ### 🏢 Architectural Comparison With Real Systems
 
 This table compares Agent-Harness against real industry systems at the **architectural level**, not just features.
@@ -87,7 +94,7 @@ This table compares Agent-Harness against real industry systems at the **archite
 
 ---
 
-### 🔧 How Agent-Harness Is Useful
+## 🔧 How Agent-Harness Is Useful
 
 **1. Prevent Runaway Loops** — Agents frequently retry failing tools indefinitely. Agent-Harness detects stagnation (zero reward across steps) and halts execution deterministically via `FailureType.STAGNATION`.
 
@@ -147,50 +154,6 @@ if result.halted:
 else:
     print(f"ALLOWED. Remaining Effort: {result.budget.effort:.2f}")
 ```
-
----
-
-## 🛡️ Threat Model
-
-Agent-Harness enforces bounded execution. It is designed with a specific threat landscape in mind.
-
-**What it PROTECTS against:**
-- **Runaway Loops:** Agents getting stuck hallucinating the same failing tool calls indefinitely.
-- **Prompt Isolation Breakdown:** Adversarial inputs (Prompt Injections) overriding the system prompt and hijacking the agent's goals.
-- **Unauthorized OS Probing:** LLMs attempting to execute arbitrary code (e.g., `os.system()`, `exec()`) when they shouldn't.
-- **Unbounded Costs:** Infinite loops draining LLM API token budgets.
-- **Data Exfiltration (Basic):** Pattern-based PII leakage in tool outputs or inputs.
-
-**What it DOES NOT protect against:**
-- **Semantic Hallucinations:** If the underlying evaluator feeds "fake" rewards to the Harness, the Harness cannot know the progress is hallucinated.
-- **Sophisticated Obfuscation:** The current guardrails use regex/heuristics and may miss highly encoded or obfuscated attacks.
-- **Host System Compromise**: Agent-Harness bounds the agent's logic, but sandbox isolation (like Docker) is still required to secure the host machine.
-
----
-
----
-
-## ✅ The 15-Point AI Governance Checklist
-
-Agent-Harness natively implements the "World & IBM" 15-Point AI Governance Checklist via deterministic runtime execution mechanisms:
-
-| Governance Rule | Enforcement Mechanism |
-| :--- | :--- |
-| **1. Unbounded Behavior** (Prevent infinite loops) | Finite `effort` and `persistence` budgets deplete with action. Zero budget = Terminal Halt. |
-| **2. Runtime Control** (Intervene during execution) | Dynamic `step()` evaluates signals at runtime (Hz) and updates control state immediately. |
-| **3. Deterministic Behavior** (Same inputs → Same decision) | State transitions use hardcoded, versioned matrices. No random seeds exist in the Kernel. |
-| **4. Explainable Halting** (Explicit halt reasons) | Halts return explicit `FailureType` flags (e.g., `OVERRISK`, `STAGNATION`) and precise string reasons. |
-| **5. Fail-Closed Semantics** (Default to block) | Once halted, state freezes permanently. Proxy middleware returns 403 on any error. |
-| **6. Physical Enforcement** (Physically block actions) | `ProxyEnforcer` intercepts all tool calls at the network level, forcing halts. |
-| **7. Auditability** (Log every decision) | Hash-chained SHA256-linked entries in append-only JSONL files. CLI verification utility provided. |
-| **8. Accountability** (Who authorized this?) | Multi-agent coordination mechanisms track `agent_id` and parentage for every logged action. |
-| **9. Risk Containment** (Bound risky actions) | Dedicated `risk` budget accumulator. Hard caps trigger an immediate terminal halt. |
-| **10. Progress Discrimination** (Busy ≠ Productive) | Stagnation detection windows identify and halt cycles of low-reward, busy-work activity. |
-| **11. Bad Telemetry Resilience** (If sensors lie, slow down) | `trust` signal dampens positive feedback (reward) but correctly passes negative feedback (difficulty). |
-| **12. Model-Agnosticism** (Work across vendors) | The Kernel consumes dimensional `Signals` (floats), completely independent of the LLM or embeddings used. |
-| **13. Human Override** (Humans remain authority) | The `reset()` method requires explicit calls. There is no autonomous self-healing from terminal failures. |
-| **14. Compliance Readiness** (Support reporting) | Hash-chained JSONL trace exports. Prometheus metrics natively broadcast at `/metrics`. |
-| **15. Scalability** (Scale across multiple agents) | `SystemGovernor` and `SharedBudgetPool` manage swarms globally to prevent cascading swarm failures. |
 
 ---
 
@@ -295,6 +258,30 @@ Based on the `src/governance/` module structure, the repository is composed of s
 
 ---
 
+## ✅ The 15-Point AI Governance Checklist
+
+Agent-Harness natively implements the "World & IBM" 15-Point AI Governance Checklist via deterministic runtime execution mechanisms:
+
+| Governance Rule | Enforcement Mechanism |
+| :--- | :--- |
+| **1. Unbounded Behavior** (Prevent infinite loops) | Finite `effort` and `persistence` budgets deplete with action. Zero budget = Terminal Halt. |
+| **2. Runtime Control** (Intervene during execution) | Dynamic `step()` evaluates signals at runtime (Hz) and updates control state immediately. |
+| **3. Deterministic Behavior** (Same inputs → Same decision) | State transitions use hardcoded, versioned matrices. No random seeds exist in the Kernel. |
+| **4. Explainable Halting** (Explicit halt reasons) | Halts return explicit `FailureType` flags (e.g., `OVERRISK`, `STAGNATION`) and precise string reasons. |
+| **5. Fail-Closed Semantics** (Default to block) | Once halted, state freezes permanently. Proxy middleware returns 403 on any error. |
+| **6. Physical Enforcement** (Physically block actions) | `ProxyEnforcer` intercepts all tool calls at the network level, forcing halts. |
+| **7. Auditability** (Log every decision) | Hash-chained SHA256-linked entries in append-only JSONL files. CLI verification utility provided. |
+| **8. Accountability** (Who authorized this?) | Multi-agent coordination mechanisms track `agent_id` and parentage for every logged action. |
+| **9. Risk Containment** (Bound risky actions) | Dedicated `risk` budget accumulator. Hard caps trigger an immediate terminal halt. |
+| **10. Progress Discrimination** (Busy ≠ Productive) | Stagnation detection windows identify and halt cycles of low-reward, busy-work activity. |
+| **11. Bad Telemetry Resilience** (If sensors lie, slow down) | `trust` signal dampens positive feedback (reward) but correctly passes negative feedback (difficulty). |
+| **12. Model-Agnosticism** (Work across vendors) | The Kernel consumes dimensional `Signals` (floats), completely independent of the LLM or embeddings used. |
+| **13. Human Override** (Humans remain authority) | The `reset()` method requires explicit calls. There is no autonomous self-healing from terminal failures. |
+| **14. Compliance Readiness** (Support reporting) | Hash-chained JSONL trace exports. Prometheus metrics natively broadcast at `/metrics`. |
+| **15. Scalability** (Scale across multiple agents) | `SystemGovernor` and `SharedBudgetPool` manage swarms globally to prevent cascading swarm failures. |
+
+---
+
 ## 🛑 Failure Semantics
 
 | Failure | Trigger | Consequence |
@@ -307,8 +294,6 @@ Based on the `src/governance/` module structure, the repository is composed of s
 
 ---
 
----
-
 ## 🔌 Integrations
 
 The Harness detects native abstractions across common LLM agent frameworks and enforces boundaries transparently. Working wrapper examples are located in `integrations/`:
@@ -317,6 +302,24 @@ The Harness detects native abstractions across common LLM agent frameworks and e
 - **CrewAI**: Limits task iterations and monitors role boundaries (`crewai_ollama.py`, `crewai_openai.py`).
 - **AutoGen**: Hooks into `UserProxyAgent` conversations (`autogen_ollama.py`, `autogen_openai.py`).
 - **OpenAI SDK**: Provides direct function-calling guardrails (`openai_sdk.py`, `openai_sdk_ollama.py`).
+
+---
+
+## 📂 Project Structure
+
+```text
+Agent-Harness/
+├── src/
+│   └── governance/         # Core kernel, budgets, evaluators, mechanisms
+├── problems/               # S-class problem sets and benchmarks
+├── integrations/           # Connectors for LangChain, AutoGen, CrewAI, OpenAI
+├── examples/               # Demonstrations of layered governance and edge cases
+├── tests/                  # PyTest suites verifying mathematical limits
+├── docs/                   # Deep dives and visual assets
+├── deployment/             # Docker, Compose, and Dashboards
+├── scripts/                # Utility and maintenance scripts
+└── config/                 # YAML configuration bindings
+```
 
 ---
 
@@ -370,6 +373,24 @@ python scripts/replay_audit.py verify audit_chain.jsonl
 
 ---
 
+## 🛡️ Threat Model
+
+Agent-Harness enforces bounded execution. It is designed with a specific threat landscape in mind.
+
+**What it PROTECTS against:**
+- **Runaway Loops:** Agents getting stuck hallucinating the same failing tool calls indefinitely.
+- **Prompt Isolation Breakdown:** Adversarial inputs (Prompt Injections) overriding the system prompt and hijacking the agent's goals.
+- **Unauthorized OS Probing:** LLMs attempting to execute arbitrary code (e.g., `os.system()`, `exec()`) when they shouldn't.
+- **Unbounded Costs:** Infinite loops draining LLM API token budgets.
+- **Data Exfiltration (Basic):** Pattern-based PII leakage in tool outputs or inputs.
+
+**What it DOES NOT protect against:**
+- **Semantic Hallucinations:** If the underlying evaluator feeds "fake" rewards to the Harness, the Harness cannot know the progress is hallucinated.
+- **Sophisticated Obfuscation:** The current guardrails use regex/heuristics and may miss highly encoded or obfuscated attacks.
+- **Host System Compromise**: Agent-Harness bounds the agent's logic, but sandbox isolation (like Docker) is still required to secure the host machine.
+
+---
+
 ## ⚠️ Limitations
 
 - **Heuristic Reliance**: The built-in `PromptInjectionDetector`, `PIIDetector`, and `CodeExecutionGuard` use hardcoded regex strategies. They may raise false positives on highly contextual payloads or miss deeply obfuscated attacks.
@@ -383,21 +404,3 @@ python scripts/replay_audit.py verify audit_chain.jsonl
 - **LLM-assisted Semantic Guardrails**: Moving beyond regex into fast, quantized models evaluating signal context natively.
 - **Network Extensibility**: Expanding `SystemGovernor` to allow real-time distributed resource pooling between autonomous swarms.
 - **Dynamic Threshold Selection**: Automatically pivoting between `CONSERVATIVE` and `AGGRESSIVE` profiles based on historical session hashes.
-
----
-
-## 📂 Project Structure
-
-```text
-Agent-Harness/
-├── src/
-│   └── governance/         # Core kernel, budgets, evaluators, mechanisms
-├── problems/               # S-class problem sets and benchmarks
-├── integrations/           # Connectors for LangChain, AutoGen, CrewAI, OpenAI
-├── examples/               # Demonstrations of layered governance and edge cases
-├── tests/                  # PyTest suites verifying mathematical limits
-├── docs/                   # Deep dives and visual assets
-├── deployment/             # Docker, Compose, and Dashboards
-├── scripts/                # Utility and maintenance scripts
-└── config/                 # YAML configuration bindings
-```
