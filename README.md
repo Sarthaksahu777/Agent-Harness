@@ -11,7 +11,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/Sarthaksahu777/Agent-Harness?style=flat-square)](https://github.com/Sarthaksahu777/Agent-Harness)
 [![Downloads](https://img.shields.io/pypi/dm/agentharnessengine?style=flat-square)](https://pypi.org/project/agentharnessengine/)
 
-*Agent-Harness enforces the **15-Point AI Governance Checklist** for safe, deterministic, and bounded autonomous systems by translating environmental signals into strict mathematical execution limits.*
+*A deterministic runtime governance engine that enforces bounded, auditable execution for autonomous AI agents.*
 
 </div>
 
@@ -60,20 +60,16 @@ Most AI safety solutions are **probabilistic** (LLM validation) or **stateless**
 
 ### 🏢 Architectural Comparison With Real Systems
 
-This table compares Agent-Harness against real industry systems at the **architectural level**, not just features.
+| System | Architecture | Enforcement | Determinism | Best For |
+| :--- | :--- | :--- | :--- | :--- |
+| **Agent-Harness** | External Sidecar / Proxy Kernel | Physical halt (403 / kill) | **Absolute** (closed-form math) | **Autonomous agent execution** |
+| **NeMo Guardrails** (NVIDIA) | Conversational Orchestration | Dialog steering / topic blocking | Probabilistic (Colang + LLM) | Chatbot topic safety |
+| **Llama Guard** (Meta) | Fine-tuned LLM Classifier | Binary safe/unsafe classification | Probabilistic (LLM inference) | Content moderation |
+| **Guardrails AI** | Python Validator Framework | Input/Output validation | Heuristic (regex + validators) | Output format validation |
+| **HAL Harness** | Offline Evaluation Suite | None (post-hoc scoring) | N/A | Agent benchmarking |
+| **AgentGuard** (Research) | Online MDP Verifier | Probabilistic guarantees | Probabilistic | Research verification |
 
-| Dimension | **Agent-Harness** | **NeMo Guardrails** (NVIDIA) | **Llama Guard** (Meta) | **Guardrails AI** | **HAL Harness** | **AgentGuard** (Research) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Architecture** | External Sidecar / Proxy Kernel | Conversational Orchestration Layer | Fine-tuned LLM Classifier | Python Validator Framework | Offline Evaluation Suite | Online MDP Verifier |
-| **Enforcement** | Physical halt (403 / process kill) | Dialog steering / topic blocking | Binary safe/unsafe classification | Input/Output validation | None (post-hoc scoring) | Probabilistic guarantees |
-| **When It Acts** | **Runtime** (every step) | Runtime (conversational) | Pre/Post generation | Pre/Post generation | **After execution** | Runtime (observation) |
-| **State Model** | **Full behavioral trajectory** (effort, risk, exploration budgets) | Conversation history only | Stateless (per-request) | Stateless (per-request) | Stateless (per-benchmark) | Dynamic MDP model |
-| **Determinism** | **Absolute** (closed-form math) | Probabilistic (Colang + LLM) | Probabilistic (LLM inference) | Heuristic (regex + validators) | N/A | Probabilistic |
-| **Latency** | **~0.06ms** (pure math) | ~100ms (LLM routing) | ~200ms+ (model inference) | ~10ms (regex/pydantic) | N/A | Varies |
-| **Bypassability** | **Non-bypassable** (sidecar) | Moderate (in-app) | Moderate (wrapper) | High (in-process) | N/A | Low (external) |
-| **Best For** | **Autonomous agent execution** | Chatbot topic safety | Content moderation | Output format validation | Agent benchmarking | Research verification |
-
-**Key Insight:** Most industry systems focus on **what an agent says** (content safety). Agent-Harness focuses on **whether an agent is allowed to keep acting** (behavioral governance). These are fundamentally different architectural concerns.
+**Key Insight:** Most industry systems focus on **what an agent says** (content safety). Agent-Harness focuses on **whether an agent is allowed to keep acting** (behavioral governance).
 
 ---
 
@@ -219,7 +215,7 @@ Based on the `src/governance/` module structure, the repository is composed of s
 
 ## ✅ The 15-Point AI Governance Checklist
 
-Agent-Harness natively implements the "World & IBM" 15-Point AI Governance Checklist via deterministic runtime execution mechanisms:
+Agent-Harness natively implements the 15-Point AI Governance Checklist via deterministic runtime execution mechanisms:
 
 | Governance Rule | Enforcement Mechanism |
 | :--- | :--- |
