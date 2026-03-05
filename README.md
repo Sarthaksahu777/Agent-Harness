@@ -18,27 +18,10 @@
 ---
 
 ## 📑 Table of Contents
-- [What is Agent-Harness?](#-what-is-agent-harness)
-- [Motivation](#-motivation--problem-statement)
-- [Determinism vs. Industry](#-why-agent-harness-determinism-vs-industry)
-- [How Agent-Harness Is Useful](#-how-agent-harness-is-useful)
-- [Deployment & Installation](#-deployment--installation)
-- [Architecture](#-architecture)
-- [Visual Budget Dynamics](#-visual-budget-dynamics)
-- [Failure Mode Progression](#-failure-mode-progression)
-- [System Behavior](#-example-system-behavior)
-- [Core Components](#-core-components)
-- [Governance Checklist](#-the-15-point-ai-governance-checklist)
-- [Failure Semantics](#-failure-semantics)
-- [Integrations](#-integrations)
-- [Project Structure](#-project-structure)
-- [Performance](#-performance--efficiency)
-- [Anti-Gaming](#-anti-gaming--robustness)
-- [Observability](#-observability-and-logging)
-- [Security Model](#-security-model)
-- [Threat Model](#-threat-model)
-- [Limitations](#-limitations)
-- [Roadmap](#-roadmap)
+- [Overview & Motivation](#-what-is-agent-harness) · [Determinism vs. Industry](#-why-agent-harness-determinism-vs-industry) · [How It's Useful](#-how-agent-harness-is-useful)
+- [Deployment & Quick Start](#-deployment--installation) · [Architecture](#-architecture) · [System Behavior](#-example-system-behavior)
+- [Core Components](#-core-components) · [Governance Checklist](#-the-15-point-ai-governance-checklist) · [Failure Semantics](#-failure-semantics)
+- [Integrations](#-integrations) · [Performance](#-performance--efficiency) · [Security & Threat Model](#-security-model)
 
 ---
 
@@ -190,31 +173,7 @@ The internal kernel state update algorithm ensures that no action is taken witho
 
 ---
 
-## 📉 Visual Budget Dynamics
-
-<p align="center">
-<img src="docs/images/budget_dynamics.png" width="650">
-</p>
-
-Behavioral budgets (effort, persistence) are strictly bounded and monotonically depleting. Under sustained failure, the budget inevitably crosses the exhaustion threshold, forcing a terminal halt.
-
----
-
-## 🛑 Failure Mode Progression
-
-<p align="center">
-<img src="docs/images/failure_progression.png" width="650">
-</p>
-
-Agent-Harness deterministically tracks state transitions based on cumulative budgets:
-1. **Healthy**: Executing with full budgets.
-2. **Warning**: Lower ROI or repeated errors trigger "Recovering" mode where risk is temporarily frozen.
-3. **Critical**: Extreme low effort or high risk approaches the physical boundary limit.
-4. **Terminal Halt**: The agent crosses a hard boundary (`EXHAUSTION`, `STAGNATION`, `OVERRISK`). A 403 is issued to the logic loop, permanently ending the session.
-
----
-
-## 💻 Example System Behavior
+##  Example System Behavior
 
 Here is how the Agent-Harness reacts to standard scenarios:
 
@@ -280,6 +239,14 @@ Agent-Harness natively implements the "World & IBM" 15-Point AI Governance Check
 | **14. Compliance Readiness** (Support reporting) | Hash-chained JSONL trace exports. Prometheus metrics natively broadcast at `/metrics`. |
 | **15. Scalability** (Scale across multiple agents) | `SystemGovernor` and `SharedBudgetPool` manage swarms globally to prevent cascading swarm failures. |
 
+### 📉 Budget Dynamics
+
+Behavioral budgets (effort, persistence) are strictly bounded and monotonically depleting. Under sustained failure, the budget inevitably crosses the exhaustion threshold, forcing a terminal halt.
+
+<p align="center">
+<img src="docs/images/budget_dynamics.png" width="650">
+</p>
+
 ---
 
 ## 🛑 Failure Semantics
@@ -291,6 +258,14 @@ Agent-Harness natively implements the "World & IBM" 15-Point AI Governance Check
 | **OVERRISK** | `Risk` exceeds maximum limit | Immediate 403 |
 | **SAFETY** | `Exploration` capacity exceeded | Session severed |
 | **EXTERNAL** | Hard step fuse limit reached | Instant halt |
+
+### 🛑 Failure Mode Progression
+
+<p align="center">
+<img src="docs/images/failure_progression.png" width="650">
+</p>
+
+State transitions: **Healthy** → **Warning** (low ROI) → **Critical** (near boundary) → **Terminal Halt** (`EXHAUSTION`, `STAGNATION`, `OVERRISK`). A 403 permanently ends the session.
 
 ---
 
