@@ -354,11 +354,11 @@ Agent-Harness enforces bounded execution. It is designed with a specific threat 
 
 Agent-Harness is validated against extreme operational conditions to ensure zero-bypass governance:
 
-- **Event Horizon Benchmarks**: 15 S-class "Black Hole" problem sets testing RL Generalization, Distributed Consensus, and Recursive Self-Improvement stability.
-- **Monte Carlo Stress Tests**: Thousands of randomized trajectories verifying kernel invariants under chaotic environment signals.
-- **Adversarial Safety Suite**: Rigorous validation of `GuardrailStack` with 80%+ detection rates for prompt injection, PII leakage, and dangerous code patterns.
-- **Multi-Agent Swarm Simulations**: Validated coordination of 100+ concurrent agents using `SharedBudgetPool` and `CascadeDetector`.
-- **Policy Enforcement Scaling**: Verified stability and performance across 1,000+ sequential policy evaluations under sustained load.
+- **Event Horizon Benchmarks**: 15 internal problem sets mapping complex semantic failures (from the Black-Hole problem set) to deterministic kernel signal patterns (RL Generalization, Distributed Consensus, etc.).
+- **Monte Carlo Stress Tests**: A high-intensity suite (`monte_carlo_stress.py`) that executes 12,000 randomized trajectories per run to verify that governance invariants hold under chaotic conditions.
+- **Adversarial Pattern Suite**: Unit tests verifying the `GuardrailStack` against known prompt injection, PII leakage, and dangerous code patterns (regex-based detection).
+- **Multi-Agent Swarm Simulations**: Validated coordination of swarm-level constraints via `SharedBudgetPool` and `CascadeDetector` tests.
+- **Policy Enforcement Scaling**: Continuous stability validation across 1,000+ sequential policy evaluations to ensure zero memory leaks or state drift.
 
 ---
 
