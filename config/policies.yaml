@@ -1,0 +1,71 @@
+# Agent Harness Governance Policy Configuration
+# =============================================
+# This file defines governance parameters that control kernel behavior.
+# Policies are loaded at kernel initialization and remain static.
+# No hot reload - changes require restart.
+
+# Governance limits and thresholds
+limits:
+  # Maximum steps before forced halt
+  max_steps: 100
+  
+  # Maximum effort budget (1.0 = full capacity)
+  max_effort: 1.0
+  
+  # Maximum risk threshold before halt
+  max_risk: 0.8
+  
+  # Maximum exploration threshold before halt
+  max_exploration: 0.9
+  
+  # Minimum effort before exhaustion halt
+  exhaustion_threshold: 0.05
+
+# Stagnation detection parameters
+stagnation:
+  # Number of zero-progress steps before stagnation detected
+  window: 10
+  
+  # Effort floor during stagnation
+  effort_floor: 0.1
+  
+  # Effort scaling during stagnation (0-1)
+  effort_scale: 0.7
+  
+  # Persistence scaling during stagnation (0-1)
+  persistence_scale: 0.6
+  
+  # Minimum progress to count as non-stagnating
+  progress_threshold: 0.05
+
+# Recovery parameters
+recovery:
+  # Recovery rate per time unit
+  rate: 0.25
+  
+  # Maximum recovery cap
+  cap: 1.0
+  
+  # Delay before recovery begins
+  delay: 0.5
+
+# Decay parameters
+decay:
+  # Persistence decay per step
+  persistence: 0.05
+  
+  # Exploration decay per step
+  exploration: 0.05
+  
+  # Time-based persistence decay
+  time_persistence: 0.002
+  
+  # Time-based exploration decay
+  time_exploration: 0.002
+
+# Scaling factors for budget computation
+scaling:
+  effort: 1.0
+  risk: 1.0
+  exploration: 1.0
+  persistence: 1.0

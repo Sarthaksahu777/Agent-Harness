@@ -1,0 +1,62 @@
+# docker-compose.yml for Agent Harness
+# Provides easy local development and deployment
+
+services:
+  # Core Agent Harness Governance Proxy
+  agent-harness:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+      target: production
+    image: agent-harness:latest
+    container_name: agent-harness-proxy
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount config for runtime customization
+      - ../config:/app/config:ro
+      # Persist audit logs
+      - agent-harness-logs:/app/logs
+    environment:
+      - AGENT_HARNESS_LOG_LEVEL=INFO
+      - AGENT_HARNESS_AUDIT_DIR=/app/logs
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - agent-harness-network
+
+  # Development container with hot-reload
+  agent-harness-dev:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.dev
+    image: agent-harness:dev
+    container_name: agent-harness-dev
+    ports:
+      - "8081:8080"
+    volumes:
+      # Mount source for hot-reload during development
+      - ../src:/app/src:ro
+      - ../config:/app/config:ro
+      - ../tests:/app/tests:ro
+      - ../examples:/app/examples:ro
+    environment:
+      - AGENT_HARNESS_LOG_LEVEL=DEBUG
+      - PYTHONPATH=/app/src
+    profiles:
+      - dev
+    networks:
+      - agent-harness-network
+
+volumes:
+  agent-harness-logs:
+    driver: local
+
+networks:
+  agent-harness-network:
+    driver: bridge
