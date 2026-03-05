@@ -134,9 +134,6 @@ Agent-Harness guarantees that given the same environment signals, the governance
 
 ---
 
-> [!TIP]
-> **New to V1.1.0?** Check out the [V1 Usage Guide](docs/V1_USAGE_GUIDE.md) and the [PyPI Release Guide](docs/RELEASE_GUIDE.md).
-
 ## 🚀 Deployment & Installation
 
 ### Local Engine Setup
