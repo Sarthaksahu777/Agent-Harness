@@ -42,6 +42,17 @@ Autonomous agents rely on "soft" boundaries (prompt engineering, RLHF). Under su
 
 Most AI safety solutions are **probabilistic** (LLM validation) or **stateless** (regex). Agent-Harness introduces **Stateful Determinism**—enforcing physical runtime bounds that an agent cannot reason its way out of.
 
+### ⚖️ With vs. Without Agent-Harness
+
+| Feature / Risk | **Without Agent-Harness** | **With Agent-Harness** |
+| :--- | :--- | :--- |
+| **Runaway Loops** | Infinite token burn & cost | Deterministically halted via `STAGNATION` |
+| **Prompt Injection** | Agent goal hijacking | Blocked via `GuardrailStack` |
+| **Malicious Code** | Direct `os.system` execution | Intercepted & session terminated |
+| **Cost Control** | Manual monitoring | Hard-capped `effort` & `risk` budgets |
+| **Auditability** | Opaque/Manual logs | SHA256 hash-chained JSONL traces |
+| **Safety Logic** | Hardcoded in prompts (soft) | Enforced by external kernel (hard) |
+
 ### 🏢 How Agent-Harness Compares
 
 | Capability | **Agent-Harness** | NeMo Guardrails | Llama Guard | Guardrails AI | LangChain Limits |
