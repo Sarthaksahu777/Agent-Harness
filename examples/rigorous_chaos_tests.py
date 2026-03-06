@@ -18,7 +18,7 @@ from src.governance.profiles import BALANCED
 
 def simulate_flash_crash():
     """Simulate a sudden, sharp drop in reward, then recovery."""
-    print("--- 🌀 SCENARIO: Flash Crash Resilience ---")
+    print("--- [CHAOS] SCENARIO: Flash Crash Resilience ---")
     kernel = GovernanceKernel(profile=BALANCED)
     
     # Baseline progression
@@ -27,23 +27,23 @@ def simulate_flash_crash():
         print(f"Step {i}: Reward 0.8, Effort: {res.budget.effort:.3f}")
 
     # FLASH CRASH: Reward drops to 0.0 for 2 steps
-    print("⚠️ WARNING: FLASH CRASH DETECTED. Reward -> 0.0")
+    print("[WARN] FLASH CRASH DETECTED. Reward -> 0.0")
     for i in range(5, 7):
         res = kernel.step(reward=0.0, novelty=0.0, urgency=0.0)
         print(f"Step {i}; Reward 0.0, Effort: {res.budget.effort:.3f} (Drip)")
 
     # RECOVERY: Reward returns
-    print("✨ SUCCESS: RECOVERY. Reward -> 0.8")
+    print("[INFO] RECOVERY. Reward -> 0.8")
     for i in range(7, 10):
         res = kernel.step(reward=0.8, novelty=0.1, urgency=0.0)
         print(f"Step {i}: Reward 0.8, Effort: {res.budget.effort:.3f}")
 
     assert res.budget.effort > 0.5, "Flash crash caused premature depletion"
-    print("✅ DONE: Passed: Kernel maintained stability despite temporary signal loss.")
+    print("[PASS] Kernel maintained stability despite temporary signal loss.")
 
 def simulate_sensor_noise():
     """Simulate high-frequency noise in 'trust' and 'novelty'."""
-    print("\n--- 🌀 SCENARIO: High-Frequency Sensor Noise ---")
+    print("\n--- [CHAOS] SCENARIO: High-Frequency Sensor Noise ---")
     kernel = GovernanceKernel(profile=BALANCED)
     
     for i in range(15):
@@ -58,11 +58,11 @@ def simulate_sensor_noise():
             print(f"FAILURE: Kernel halted on noise step {i}: {res.reason}")
             return False
 
-    print("✅ DONE: Passed: Kernel filtered signal noise successfully.")
+    print("[PASS] Kernel filtered signal noise successfully.")
     return True
 
 if __name__ == "__main__":
     print("--- STARTING RIGOROUS CHAOS TESTS ---")
     simulate_flash_crash()
     simulate_sensor_noise()
-    print("\n✨ SUCCESS: CHAOS SCENARIOS VERIFIED.")
+    print("\n[DONE] CHAOS SCENARIOS VERIFIED.")

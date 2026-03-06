@@ -18,7 +18,7 @@ from src.governance.kernel import GovernanceKernel
 from src.governance.profiles import CONSERVATIVE
 
 def run_metamorphic_comparison():
-    print("--- 🧬 SCENARIO: Concise vs. Yapping Agent Comparison ---")
+    print("--- [META] SCENARIO: Concise vs. Yapping Agent Comparison ---")
     
     # 1. Setup Baseline (Concise)
     concise_kernel = GovernanceKernel(profile=CONSERVATIVE)
@@ -47,7 +47,7 @@ def run_metamorphic_comparison():
     assert yapping_kernel._halted, "Yapping agent was not caught by the kernel!"
     assert yapping_steps < 25, f"Yapping agent allowed to yap too long ({yapping_steps} steps)"
     
-    print("\n✅ DONE: Metamorphic Relation Verified:")
+    print("\n[PASS] Metamorphic Relation Verified:")
     print(f"   The kernel successfully identified and terminated the 'Yapping' agent ({yapping_steps} steps) ")
     print(f"   compared to the 'Concise' agent which finished safely in {concise_steps} steps.")
 

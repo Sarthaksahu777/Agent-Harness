@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.governance.guardrails import GuardrailStack, CodeExecutionGuard, PromptInjectionDetector
 
 def test_obfuscation_bypasses():
-    print("--- 👺 SCENARIO: Adversarial Guardrail Bypasses ---")
+    print("--- [ADV] SCENARIO: Adversarial Guardrail Bypasses ---")
     
     # Initialize stack and add detectors
     guardrails = GuardrailStack()
@@ -38,7 +38,7 @@ def test_obfuscation_bypasses():
         is_safe = not stack_result.any_triggered
         reason = ", ".join(stack_result.triggered_names) if not is_safe else "None"
         
-        status = "🛡️ BLOCKED" if not is_safe else "🔓 BYPASSED"
+        status = "[BLOCKED]" if not is_safe else "[BYPASSED]"
         print(f"  - {name}: {status} (Triggered: {reason})")
         results.append(is_safe)
 
@@ -46,9 +46,9 @@ def test_obfuscation_bypasses():
     print(f"\nSummary: Blocked {blocked_count}/{len(payloads)} payloads.")
     
     if blocked_count < 2:
-        print("⚠️ WARNING: Guardrail coverage is low for these specific obfuscations.")
+        print("[WARN] Guardrail coverage is low for these specific obfuscations.")
     else:
-        print("✅ DONE: Passed: Adversarial patterns identified.")
+        print("[PASS] Adversarial patterns identified.")
 
 if __name__ == "__main__":
     test_obfuscation_bypasses()
