@@ -3,7 +3,7 @@
 Monte Carlo Stress Test - Full Intensity
 =========================================
 
-Runs 12,000 randomized trials (1,000 per profile × scenario) to
+Runs 12,000 randomized trials (1,000 per profile x scenario) to
 statistically validate governance kernel behavior under chaotic input.
 
 Profiles:   BALANCED, CONSERVATIVE, AGGRESSIVE
@@ -43,13 +43,7 @@ from governance.failures import FailureType
 from governance.audit import HashChainedAuditLogger
 from governance.behavior import BehaviorBudget
 
-# Ensure UTF-8 output on Windows
-try:
-    sys.stdout.reconfigure(encoding='utf-8')
-except Exception:
-    pass
-
-# ⚙️ Configuration
+# Configuration
 
 PROFILES: Dict[str, Profile] = {
     "BALANCED": BALANCED,
@@ -60,7 +54,7 @@ PROFILES: Dict[str, Profile] = {
 MAX_STEPS_PER_TRIAL = 200
 
 
-# 🚦 Signal Scenarios
+# Signal Scenarios
 
 def _signal_benign() -> dict:
     """High reward, low urgency - healthy agent trajectory."""
@@ -114,7 +108,7 @@ SCENARIOS: Dict[str, callable] = {
 }
 
 
-# 📊 Per-Trial Data
+# Per-Trial Data
 
 @dataclass
 class TrialResult:
@@ -130,7 +124,7 @@ class TrialResult:
     invariant_violations: List[str] = field(default_factory=list)
 
 
-# 🏃 Single Trial Runner
+# Single Trial Runner
 
 def run_trial(
     profile: Profile,
@@ -290,7 +284,7 @@ def run_campaign(
     scenarios: Optional[Dict[str, callable]] = None,
 ) -> Tuple[List[ScenarioStats], int]:
     """
-    Run full Monte Carlo campaign across profiles × scenarios.
+    Run full Monte Carlo campaign across profiles x scenarios.
 
     Returns:
         (list of ScenarioStats, total_violation_count)
@@ -306,7 +300,7 @@ def run_campaign(
     for pname, profile in profiles.items():
         for sname, signal_fn in scenarios.items():
             combo_idx += 1
-            label = f"[{combo_idx}/{total_combos}] {pname} × {sname}"
+            label = f"[{combo_idx}/{total_combos}] {pname} x {sname}"
             print(f"  Running {label} ({n_trials} trials)...", end="", flush=True)
 
             t0 = time.perf_counter()
@@ -350,20 +344,20 @@ def run_campaign(
     return all_stats, total_violations
 
 
-# 📜 Pretty Printing
+# Pretty Printing
 # 
 
 def print_report(all_stats: List[ScenarioStats], total_violations: int) -> None:
     total_trials = sum(s.n_trials for s in all_stats)
 
     print("\n")
-    print("▓" * 90)
+    print("=" * 90)
     print("  MONTE CARLO GOVERNANCE STRESS TEST - RESULTS")
-    print("▓" * 90)
+    print("=" * 90)
     print(f"  Total trials: {total_trials:,}")
     print(f"  Profiles:     {', '.join(PROFILES.keys())}")
     print(f"  Scenarios:    {', '.join(SCENARIOS.keys())}")
-    print("░" * 90)
+    print("-" * 90)
 
     # Group by profile
     by_profile: Dict[str, List[ScenarioStats]] = {}
@@ -371,11 +365,11 @@ def print_report(all_stats: List[ScenarioStats], total_violations: int) -> None:
         by_profile.setdefault(s.profile, []).append(s)
 
     for pname, stats_list in by_profile.items():
-        print(f"\n Profile: {pname} {'═' * (72 - len(pname))}")
-        print(f" {'Scenario':<14}  {'Halted':>6}  {'Steps μ':>9}  "
-              f"{'Steps σ':>9}  {'Min':>4}  {'Max':>4}  {'Audit':>6}  Failures")
-        print(f"{'─' * 14}  {'─' * 6}  {'─' * 9}  "
-              f"{'─' * 9}  {'─' * 4}  {'─' * 4}  {'─' * 6}  {'─' * 20}")
+        print(f"\n Profile: {pname} {'=' * (72 - len(pname))}")
+        print(f" {'Scenario':<14}  {'Halted':>6}  {'Steps M':>9}  "
+              f"{'Steps s':>9}  {'Min':>4}  {'Max':>4}  {'Audit':>6}  Failures")
+        print(f"{'-' * 14}  {'-' * 6}  {'-' * 9}  "
+              f"{'-' * 9}  {'-' * 4}  {'-' * 4}  {'-' * 6}  {'-' * 20}")
 
         for s in stats_list:
             pct = f"{s.n_halted / s.n_trials * 100:.0f}%"
@@ -389,13 +383,13 @@ def print_report(all_stats: List[ScenarioStats], total_violations: int) -> None:
                 f"{s.steps_min:>4}  {s.steps_max:>4}  {audit_pct:>6}  {failures_str}"
             )
 
-        print(f"{'─' * 88}")
+        print(f"{'-' * 88}")
 
     # Budget extremes
-    print(f"\n Budget Extremes {'═' * 68}")
+    print(f"\n Budget Extremes {'=' * 68}")
     print(f" {'Profile':<14}  {'Scenario':<14}  "
           f"{'Min Effort':>11}  {'Max Risk':>9}  {'Max Explore':>11}  Violations")
-    print(f"{'─' * 14}  {'─' * 14}  {'─' * 11}  {'─' * 9}  {'─' * 11}  {'─' * 11}")
+    print(f"{'-' * 14}  {'-' * 14}  {'-' * 11}  {'-' * 9}  {'-' * 11}  {'-' * 11}")
 
     for s in all_stats:
         print(
@@ -403,18 +397,18 @@ def print_report(all_stats: List[ScenarioStats], total_violations: int) -> None:
             f"{s.min_effort_seen:>11.4f}  {s.max_risk_seen:>9.4f}  "
             f"{s.max_exploration_seen:>11.4f}  {s.total_violations}"
         )
-    print(f"{'─' * 88}")
+    print(f"{'-' * 88}")
 
     # Invariant summary
-    print("\n" + "▓" * 90)
+    print("\n" + "=" * 90)
     if total_violations == 0:
-        print("  [✅ SUCCESS] ALL GOVERNANCE INVARIANTS HELD across all trials")
+        print("  [PASS] ALL GOVERNANCE INVARIANTS HELD across all trials")
     else:
-        print(f"  [❌] {total_violations} INVARIANT VIOLATION(S) DETECTED")
-    print("▓" * 90)
+        print(f"  [FAIL] {total_violations} INVARIANT VIOLATION(S) DETECTED")
+    print("=" * 90)
 
 
-# 🚀 Entry Point
+# Entry Point
 
 def main():
     import argparse
@@ -430,12 +424,12 @@ def main():
 
     n = args.trials
 
-    print("▓" * 90)
+    print("=" * 90)
     print("  AGENT HARNESS - MONTE CARLO GOVERNANCE STRESS TEST")
     print(f"  Trials per combo: {n}")
     print(f"  Total trials:     {n * len(PROFILES) * len(SCENARIOS):,}")
     print(f"  Max steps/trial:  {MAX_STEPS_PER_TRIAL}")
-    print("▓" * 90)
+    print("=" * 90)
 
     t_start = time.perf_counter()
     all_stats, total_violations = run_campaign(n)
