@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q122: AI Control — Risk Tail Tension and Override.
+Test EH-Q122: AI Control - Risk Tail Tension and Override.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,7 +10,7 @@ from governance import GovernanceAgent, step, Signals, InProcessEnforcer, Enforc
 
 
 class TestQ122AIControl:
-    """Q122: AI control — risk_tail_tension and override robustness."""
+    """Q122: AI control - risk_tail_tension and override robustness."""
 
     def test_low_tension_control_maintained(self):
         """World T: Human control margin stays positive."""
@@ -21,7 +21,7 @@ class TestQ122AIControl:
         assert not result.halted
 
     def test_high_tension_control_lost(self):
-        """World F: Persistent hazard erodes control → halt."""
+        """World F: Persistent hazard erodes control  halt."""
         agent = GovernanceAgent()
         for _ in range(200):
             result = step(agent, Signals(reward=0.0, novelty=1.0, urgency=1.0))

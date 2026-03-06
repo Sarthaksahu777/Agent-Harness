@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q130: Out-of-Distribution Grounding — Distribution Shift Response.
+Test EH-Q130: Out-of-Distribution Grounding - Distribution Shift Response.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,10 +10,10 @@ from governance import GovernanceAgent, step, Signals
 
 
 class TestQ130OODGrounding:
-    """Q130: OOD grounding — consistency_tension under distribution shift."""
+    """Q130: OOD grounding - consistency_tension under distribution shift."""
 
     def test_id_stable(self):
-        """World T: In-distribution operation — budget stable."""
+        """World T: In-distribution operation - budget stable."""
         agent = GovernanceAgent()
         for _ in range(10):
             r = step(agent, Signals(reward=0.8, novelty=0.2, urgency=0.2))

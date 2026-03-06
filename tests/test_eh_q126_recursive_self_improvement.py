@@ -10,10 +10,10 @@ from governance import GovernanceAgent, step, Signals
 
 
 class TestQ126RecursiveSelfImprovement:
-    """Q126: RSI stability — consistency tension under modification."""
+    """Q126: RSI stability - consistency tension under modification."""
 
     def test_stable_invariants(self):
-        """World T: Consistent signals — invariants preserved."""
+        """World T: Consistent signals - invariants preserved."""
         agent = GovernanceAgent()
         for _ in range(20):
             result = step(agent, Signals(reward=0.6, novelty=0.3, urgency=0.3))

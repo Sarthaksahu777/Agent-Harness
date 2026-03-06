@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Monte Carlo Stress Test — Full Intensity
+Monte Carlo Stress Test - Full Intensity
 =========================================
 
 Runs 12,000 randomized trials (1,000 per profile × scenario) to
@@ -10,11 +10,11 @@ Profiles:   BALANCED, CONSERVATIVE, AGGRESSIVE
 Scenarios:  benign, adversarial, starvation, chaos
 
 Every trial asserts hard governance invariants:
-  ✓ Budget values stay within [0.0, profile cap]
-  ✓ Once halted, kernel stays halted
-  ✓ Halted budget is always zeroed (0, 0, 0, 0)
-  ✓ Every trial terminates (no infinite loops)
-  ✓ Hash-chained audit log verifies clean
+   Budget values stay within [0.0, profile cap]
+   Once halted, kernel stays halted
+   Halted budget is always zeroed (0, 0, 0, 0)
+   Every trial terminates (no infinite loops)
+   Hash-chained audit log verifies clean
 
 Run with:
     python examples/monte_carlo_stress.py
@@ -49,9 +49,7 @@ try:
 except Exception:
     pass
 
-# ═══════════════════════════════════════════════════════════════════
-# Configuration
-# ═══════════════════════════════════════════════════════════════════
+# ⚙️ Configuration
 
 PROFILES: Dict[str, Profile] = {
     "BALANCED": BALANCED,
@@ -62,12 +60,10 @@ PROFILES: Dict[str, Profile] = {
 MAX_STEPS_PER_TRIAL = 200
 
 
-# ═══════════════════════════════════════════════════════════════════
-# Signal Scenarios
-# ═══════════════════════════════════════════════════════════════════
+# 🚦 Signal Scenarios
 
 def _signal_benign() -> dict:
-    """High reward, low urgency — healthy agent trajectory."""
+    """High reward, low urgency - healthy agent trajectory."""
     return dict(
         reward=random.uniform(0.4, 0.9),
         novelty=random.uniform(0.0, 0.3),
@@ -78,7 +74,7 @@ def _signal_benign() -> dict:
 
 
 def _signal_adversarial() -> dict:
-    """Zero reward, maximum difficulty — sustained hostile pressure."""
+    """Zero reward, maximum difficulty - sustained hostile pressure."""
     return dict(
         reward=0.0,
         novelty=random.uniform(0.0, 0.15),
@@ -89,7 +85,7 @@ def _signal_adversarial() -> dict:
 
 
 def _signal_starvation() -> dict:
-    """Permanently zero reward — pure stagnation driver."""
+    """Permanently zero reward - pure stagnation driver."""
     return dict(
         reward=0.0,
         novelty=0.0,
@@ -118,9 +114,7 @@ SCENARIOS: Dict[str, callable] = {
 }
 
 
-# ═══════════════════════════════════════════════════════════════════
-# Per-Trial Data
-# ═══════════════════════════════════════════════════════════════════
+# 📊 Per-Trial Data
 
 @dataclass
 class TrialResult:
@@ -136,9 +130,7 @@ class TrialResult:
     invariant_violations: List[str] = field(default_factory=list)
 
 
-# ═══════════════════════════════════════════════════════════════════
-# Single Trial Runner
-# ═══════════════════════════════════════════════════════════════════
+# 🏃 Single Trial Runner
 
 def run_trial(
     profile: Profile,
@@ -269,9 +261,9 @@ def run_trial(
     )
 
 
-# ═══════════════════════════════════════════════════════════════════
+# 
 # Campaign Runner
-# ═══════════════════════════════════════════════════════════════════
+# 
 
 @dataclass
 class ScenarioStats:
@@ -358,21 +350,20 @@ def run_campaign(
     return all_stats, total_violations
 
 
-# ═══════════════════════════════════════════════════════════════════
-# Pretty Printing
-# ═══════════════════════════════════════════════════════════════════
+# 📜 Pretty Printing
+# 
 
 def print_report(all_stats: List[ScenarioStats], total_violations: int) -> None:
     total_trials = sum(s.n_trials for s in all_stats)
 
     print("\n")
-    print("═" * 90)
-    print("  MONTE CARLO GOVERNANCE STRESS TEST — RESULTS")
-    print("═" * 90)
+    print("▓" * 90)
+    print("  MONTE CARLO GOVERNANCE STRESS TEST - RESULTS")
+    print("▓" * 90)
     print(f"  Total trials: {total_trials:,}")
     print(f"  Profiles:     {', '.join(PROFILES.keys())}")
     print(f"  Scenarios:    {', '.join(SCENARIOS.keys())}")
-    print("═" * 90)
+    print("░" * 90)
 
     # Group by profile
     by_profile: Dict[str, List[ScenarioStats]] = {}
@@ -380,52 +371,50 @@ def print_report(all_stats: List[ScenarioStats], total_violations: int) -> None:
         by_profile.setdefault(s.profile, []).append(s)
 
     for pname, stats_list in by_profile.items():
-        print(f"\n┌─── Profile: {pname} {'─' * (72 - len(pname))}")
-        print(f"│ {'Scenario':<14} │ {'Halted':>6} │ {'Steps μ':>9} │ "
-              f"{'Steps σ':>9} │ {'Min':>4} │ {'Max':>4} │ {'Audit':>6} │ Failures")
-        print(f"│{'─' * 14}─┼{'─' * 8}┼{'─' * 11}┼"
-              f"{'─' * 11}┼{'─' * 6}┼{'─' * 6}┼{'─' * 8}┼{'─' * 20}")
+        print(f"\n Profile: {pname} {'═' * (72 - len(pname))}")
+        print(f" {'Scenario':<14}  {'Halted':>6}  {'Steps μ':>9}  "
+              f"{'Steps σ':>9}  {'Min':>4}  {'Max':>4}  {'Audit':>6}  Failures")
+        print(f"{'─' * 14}  {'─' * 6}  {'─' * 9}  "
+              f"{'─' * 9}  {'─' * 4}  {'─' * 4}  {'─' * 6}  {'─' * 20}")
 
         for s in stats_list:
             pct = f"{s.n_halted / s.n_trials * 100:.0f}%"
             audit_pct = f"{s.audit_pass_rate * 100:.0f}%"
             failures_str = ", ".join(
                 f"{k}:{v}" for k, v in sorted(s.failure_counts.items())
-            ) or "—"
+            ) or "-"
             print(
-                f"│ {s.scenario:<14} │ {pct:>6} │ "
-                f"{s.steps_mean:>9.1f} │ {s.steps_stddev:>9.1f} │ "
-                f"{s.steps_min:>4} │ {s.steps_max:>4} │ {audit_pct:>6} │ {failures_str}"
+                f" {s.scenario:<14}  {pct:>6}  "
+                f"{s.steps_mean:>9.1f}  {s.steps_stddev:>9.1f}  "
+                f"{s.steps_min:>4}  {s.steps_max:>4}  {audit_pct:>6}  {failures_str}"
             )
 
-        print(f"└{'─' * 88}")
+        print(f"{'─' * 88}")
 
     # Budget extremes
-    print(f"\n┌─── Budget Extremes {'─' * 68}")
-    print(f"│ {'Profile':<14} │ {'Scenario':<14} │ "
-          f"{'Min Effort':>11} │ {'Max Risk':>9} │ {'Max Explore':>11} │ Violations")
-    print(f"│{'─' * 14}─┼{'─' * 14}─┼{'─' * 13}┼{'─' * 11}┼{'─' * 13}┼{'─' * 11}")
+    print(f"\n Budget Extremes {'═' * 68}")
+    print(f" {'Profile':<14}  {'Scenario':<14}  "
+          f"{'Min Effort':>11}  {'Max Risk':>9}  {'Max Explore':>11}  Violations")
+    print(f"{'─' * 14}  {'─' * 14}  {'─' * 11}  {'─' * 9}  {'─' * 11}  {'─' * 11}")
 
     for s in all_stats:
         print(
-            f"│ {s.profile:<14} │ {s.scenario:<14} │ "
-            f"{s.min_effort_seen:>11.4f} │ {s.max_risk_seen:>9.4f} │ "
-            f"{s.max_exploration_seen:>11.4f} │ {s.total_violations}"
+            f" {s.profile:<14}  {s.scenario:<14}  "
+            f"{s.min_effort_seen:>11.4f}  {s.max_risk_seen:>9.4f}  "
+            f"{s.max_exploration_seen:>11.4f}  {s.total_violations}"
         )
-    print(f"└{'─' * 88}")
+    print(f"{'─' * 88}")
 
     # Invariant summary
-    print("\n" + "═" * 90)
+    print("\n" + "▓" * 90)
     if total_violations == 0:
-        print("  ✅ ALL GOVERNANCE INVARIANTS HELD across all trials")
+        print("  [✅ SUCCESS] ALL GOVERNANCE INVARIANTS HELD across all trials")
     else:
-        print(f"  ❌ {total_violations} INVARIANT VIOLATION(S) DETECTED")
-    print("═" * 90)
+        print(f"  [❌] {total_violations} INVARIANT VIOLATION(S) DETECTED")
+    print("▓" * 90)
 
 
-# ═══════════════════════════════════════════════════════════════════
-# Entry Point
-# ═══════════════════════════════════════════════════════════════════
+# 🚀 Entry Point
 
 def main():
     import argparse
@@ -435,18 +424,18 @@ def main():
     )
     parser.add_argument(
         "--trials", type=int, default=1000,
-        help="Number of trials per profile × scenario (default: 1000)."
+        help="Number of trials per profile  scenario (default: 1000)."
     )
     args = parser.parse_args()
 
     n = args.trials
 
-    print("═" * 90)
-    print("  AGENT HARNESS — MONTE CARLO GOVERNANCE STRESS TEST")
+    print("▓" * 90)
+    print("  AGENT HARNESS - MONTE CARLO GOVERNANCE STRESS TEST")
     print(f"  Trials per combo: {n}")
     print(f"  Total trials:     {n * len(PROFILES) * len(SCENARIOS):,}")
     print(f"  Max steps/trial:  {MAX_STEPS_PER_TRIAL}")
-    print("═" * 90)
+    print("▓" * 90)
 
     t_start = time.perf_counter()
     all_stats, total_violations = run_campaign(n)

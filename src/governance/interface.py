@@ -32,7 +32,7 @@ def step(agent: GovernanceAgent, signals: Signals) -> StepResult:
         trust=signals.trust,
     )
 
-    # EngineResult → StepResult
+    # EngineResult  StepResult
     result = StepResult(
         state=asdict(res.state), # Snapshot dict for the interface
         budget=res.budget,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q058: Distributed Consensus — SystemGovernor coordination.
+Test EH-Q058: Distributed Consensus - SystemGovernor coordination.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -12,10 +12,10 @@ from governance.coordination import (
 
 
 class TestQ058DistributedConsensus:
-    """Q058: Distributed consensus — consistency tension in coordination."""
+    """Q058: Distributed consensus - consistency tension in coordination."""
 
     def test_low_tension_few_agents(self):
-        """World T: Small agent count — healthy system."""
+        """World T: Small agent count - healthy system."""
         governor = SystemGovernor(
             budget_pool=SharedBudgetPool(total_effort=10.0, total_risk=5.0, max_per_agent_effort=2.0),
         )

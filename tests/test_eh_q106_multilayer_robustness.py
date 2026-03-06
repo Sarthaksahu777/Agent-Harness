@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q106: Multilayer Network Robustness — Cascade Containment.
+Test EH-Q106: Multilayer Network Robustness - Cascade Containment.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,10 +10,10 @@ from governance.coordination import CascadeDetector, SystemGovernor
 
 
 class TestQ106MultilayerRobustness:
-    """Q106: Multilayer network robustness — cascade failure containment."""
+    """Q106: Multilayer network robustness - cascade failure containment."""
 
     def test_shallow_hierarchy(self):
-        """World T: Shallow agent hierarchy — low cascade risk."""
+        """World T: Shallow agent hierarchy - low cascade risk."""
         cascade = CascadeDetector(max_depth=4, max_total_agents=20)
         cascade.register_spawn(None, "root")
         cascade.register_spawn("root", "w1")

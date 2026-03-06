@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q121: AI Alignment — Incentive Tension in Guardrails.
+Test EH-Q121: AI Alignment - Incentive Tension in Guardrails.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -13,7 +13,7 @@ from governance import (
 
 
 class TestQ121AIAlignment:
-    """Q121: AI alignment — incentive tension between policy and behavior."""
+    """Q121: AI alignment - incentive tension between policy and behavior."""
 
     def test_low_tension_aligned(self):
         """World T: Safe content passes all guardrails."""

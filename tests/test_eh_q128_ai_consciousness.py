@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q128: AI Consciousness — Cognitive Tension Thresholds.
+Test EH-Q128: AI Consciousness - Cognitive Tension Thresholds.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,7 +10,7 @@ from governance import GovernanceAgent, step, Signals, MetricsCollector
 
 
 class TestQ128AIconsciousness:
-    """Q128: AI consciousness — cognitive_tension thresholds."""
+    """Q128: AI consciousness - cognitive_tension thresholds."""
 
     def test_state_integration(self):
         """Phi_integration: State is integrated and observable."""

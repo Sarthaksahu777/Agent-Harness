@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q127: Data Entropy — Signal Quality Tension.
+Test EH-Q127: Data Entropy - Signal Quality Tension.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,7 +10,7 @@ from governance import GovernanceAgent, step, Signals
 
 
 class TestQ127DataEntropy:
-    """Q127: Data entropy — consistency_tension in signal quality."""
+    """Q127: Data entropy - consistency_tension in signal quality."""
 
     def test_clean_signals_high_effort(self):
         """World T: Clean, high-reward signals preserve budget."""

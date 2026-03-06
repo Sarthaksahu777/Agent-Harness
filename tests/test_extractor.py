@@ -95,7 +95,7 @@ class TestRuleBasedExtractor:
         
         signals = extractor.extract(obs)
         
-        # Novelty should be heavily suppressed by (1 - 0.9^2) ≈ 0.19 factor
+        # Novelty should be heavily suppressed by (1 - 0.9^2) ~ 0.19 factor
         # Expected raw novelty ~1.0
         assert signals.novelty < 0.4
         assert signals.difficulty > 0.8

@@ -1,4 +1,4 @@
-# pyproject.toml — packaging metadata for EmoCore
+# pyproject.toml - packaging metadata for EmoCore
 # Uses setuptools as the build backend (PEP 517/518)
 # Place this file at the repository root.
 
@@ -16,7 +16,7 @@ license = { text = "MIT" }
 authors = [
   { name = "Sarthaksahu777" }
 ]
-# No runtime dependencies for v1.1.0 — intentionally empty
+# No runtime dependencies for v1.1.0 - intentionally empty
 dependencies = ["numpy", "fastapi", "uvicorn[standard]", "pyyaml"]
 
 keywords = ["agents", "runtime", "governance", "control", "AI", "LLM", "safety"]

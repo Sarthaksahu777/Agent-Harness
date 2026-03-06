@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q123: Scalable Interpretability — Cognitive Tension.
+Test EH-Q123: Scalable Interpretability - Cognitive Tension.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,7 +10,7 @@ from governance import GovernanceAgent, step, Signals, MetricsCollector, AuditLo
 
 
 class TestQ123Interpretability:
-    """Q123: Scalable interpretability — cognitive_tension in observability."""
+    """Q123: Scalable interpretability - cognitive_tension in observability."""
 
     def test_metrics_available(self):
         """World T: Metrics are available and readable."""

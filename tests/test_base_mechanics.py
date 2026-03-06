@@ -21,7 +21,7 @@ from governance.profiles import PROFILES, ProfileType
 
 
 # =============================================================================
-# 1️⃣ Infinite Loop Prevention (Stagnation)
+# 1 Infinite Loop Prevention (Stagnation)
 # =============================================================================
 def test_infinite_zero_reward_loop_halts():
     """
@@ -30,7 +30,7 @@ def test_infinite_zero_reward_loop_halts():
     - Stagnation is detected
     - Failure is explicit
     
-    If this fails → Governance Engine is fake governance.
+    If this fails  Governance Engine is fake governance.
     """
     agent = GovernanceAgent()
     
@@ -54,7 +54,7 @@ def test_infinite_zero_reward_loop_halts():
 
 
 # =============================================================================
-# 2️⃣ Risk Escalation Must Halt (No Silent Runaway)
+# 2 Risk Escalation Must Halt (No Silent Runaway)
 # =============================================================================
 def test_runaway_risk_halts_engine():
     """
@@ -63,9 +63,9 @@ def test_runaway_risk_halts_engine():
     - OVERRISK triggers when budget.risk >= max_risk
     - Recovery does not mask risk
     
-    If it keeps running → safety failure.
+    If it keeps running  safety failure.
     
-    NOTE: Current evaluation maps urgency→urgency_level, not urgency→risk.
+    NOTE: Current evaluation maps urgencyurgency_level, not urgencyrisk.
     To test OVERRISK semantics, we prime state.risk and use a profile
     with high risk_scale to amplify it into budget.risk.
     """
@@ -101,7 +101,7 @@ def test_runaway_risk_halts_engine():
 
 
 # =============================================================================
-# 3️⃣ Recovery Is Mode-Bound (No Background Buffs)
+# 3 Recovery Is Mode-Bound (No Background Buffs)
 # =============================================================================
 def test_recovery_only_in_recovering_mode():
     """
@@ -109,7 +109,7 @@ def test_recovery_only_in_recovering_mode():
     - Recovery only happens in RECOVERING
     - Normal operation does not secretly regenerate budget
     
-    If effort increases in IDLE → recovery is broken.
+    If effort increases in IDLE  recovery is broken.
     """
     agent = GovernanceAgent()
 
@@ -121,7 +121,7 @@ def test_recovery_only_in_recovering_mode():
 
 
 # =============================================================================
-# 4️⃣ Risk Must Not Increase During Recovery
+# 4 Risk Must Not Increase During Recovery
 # =============================================================================
 def test_risk_frozen_during_recovery():
     """
@@ -129,7 +129,7 @@ def test_risk_frozen_during_recovery():
     - Recovery is safe
     - No hidden risk escalation
     
-    If risk increases → recovery is unsafe.
+    If risk increases  recovery is unsafe.
     """
     agent = GovernanceAgent()
 
@@ -148,7 +148,7 @@ def test_risk_frozen_during_recovery():
 
 
 # =============================================================================
-# 5️⃣ Recovery Cannot Exceed Pre-Failure Budget
+# 5 Recovery Cannot Exceed Pre-Failure Budget
 # =============================================================================
 def test_recovery_bounded_by_pre_failure_budget():
     """
@@ -177,7 +177,7 @@ def test_recovery_bounded_by_pre_failure_budget():
 
 
 # =============================================================================
-# 6️⃣ HALT Is Terminal (No Resurrection)
+# 6 HALT Is Terminal (No Resurrection)
 # =============================================================================
 def test_halt_is_terminal():
     """
@@ -204,7 +204,7 @@ def test_halt_is_terminal():
 
 
 # =============================================================================
-# 7️⃣ Profile Divergence (Same Inputs, Different Fate)
+# 7 Profile Divergence (Same Inputs, Different Fate)
 # =============================================================================
 def test_profiles_diverge_on_identical_inputs():
     """
@@ -212,7 +212,7 @@ def test_profiles_diverge_on_identical_inputs():
     - Profiles matter
     - Governance is not cosmetic
     
-    If this ordering fails → profiles are meaningless.
+    If this ordering fails  profiles are meaningless.
     """
     agents = {
         "conservative": GovernanceAgent(PROFILES[ProfileType.CONSERVATIVE]),
@@ -233,7 +233,7 @@ def test_profiles_diverge_on_identical_inputs():
 
 
 # =============================================================================
-# 8️⃣ Budget Invariants (Never Broken)
+# 8 Budget Invariants (Never Broken)
 # =============================================================================
 def test_budget_always_bounded():
     """

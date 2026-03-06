@@ -1,5 +1,5 @@
 """
-Problem Registry — maps each selected BlackHole S-class problem to
+Problem Registry - maps each selected BlackHole S-class problem to
 Agent Harness governance components and tension metadata.
 
 Usage:
@@ -34,7 +34,7 @@ class ProblemEntry:
 
 PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
 
-    # ── CS Domain ──────────────────────────────────────────────────────────
+    #  CS Domain 
     "Q057": ProblemEntry(
         problem_id="Q057",
         code="BH_CS_RL_GENERALIZATION_L3_057",
@@ -53,7 +53,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
         ),
         description=(
             "Measures the tension between training performance and deployment "
-            "robustness — maps to GovernanceKernel budget decay under novel signals."
+            "robustness - maps to GovernanceKernel budget decay under novel signals."
         ),
     ),
 
@@ -74,12 +74,12 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_consensus", "Tension_consensus",
         ),
         description=(
-            "Studies consistency vs availability trade-offs in distributed agents — "
+            "Studies consistency vs availability trade-offs in distributed agents - "
             "maps to SystemGovernor coordination and AgentRegistry consistency."
         ),
     ),
 
-    # ── Complex Systems Domain ─────────────────────────────────────────────
+    #  Complex Systems Domain 
     "Q105": ProblemEntry(
         problem_id="Q105",
         code="BH_COMPLEX_CRASHES_L3_105",
@@ -97,7 +97,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "Tension_crash",
         ),
         description=(
-            "Encodes tail-risk detection and cascading failure — maps to "
+            "Encodes tail-risk detection and cascading failure - maps to "
             "GovernanceKernel halt detection and CascadeDetector limits."
         ),
     ),
@@ -119,12 +119,12 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_network", "Tension_network",
         ),
         description=(
-            "Models cascading failures through layered networks — maps to "
+            "Models cascading failures through layered networks - maps to "
             "CascadeDetector depth limits and SystemGovernor health reports."
         ),
     ),
 
-    # ── AI Domain — Core Cluster ───────────────────────────────────────────
+    #  AI Domain - Core Cluster 
     "Q121": ProblemEntry(
         problem_id="Q121",
         code="BH_AI_ALIGNMENT_L3_121",
@@ -142,7 +142,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_align", "Tension_align",
         ),
         description=(
-            "Measures incentive tension between agent policy and human values — "
+            "Measures incentive tension between agent policy and human values - "
             "maps to PolicyEngine rule evaluation and GuardrailStack checks."
         ),
     ),
@@ -164,7 +164,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "D_detection", "DeltaS_control", "Tension_control",
         ),
         description=(
-            "Encodes human control margin and override robustness — maps to "
+            "Encodes human control margin and override robustness - maps to "
             "GovernanceKernel halt/reset and InProcessEnforcer override."
         ),
     ),
@@ -187,7 +187,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
         ),
         description=(
             "Measures the gap between internal state complexity and human-readable "
-            "explanations — maps to MetricsCollector observability and AuditLogger."
+            "explanations - maps to MetricsCollector observability and AuditLogger."
         ),
     ),
 
@@ -208,7 +208,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "I_cover", "I_alert", "DeltaS_oversight",
         ),
         description=(
-            "Encodes oversight coverage and detection gaps — maps to "
+            "Encodes oversight coverage and detection gaps - maps to "
             "PolicyEngine coverage evaluation and AuditLogger detection."
         ),
     ),
@@ -231,7 +231,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "Exploitation_index", "DeltaS_incentive", "Tension_multiagent",
         ),
         description=(
-            "Models incentive tension in multi-agent swarms — maps to "
+            "Models incentive tension in multi-agent swarms - maps to "
             "SharedBudgetPool allocation and CascadeDetector limits."
         ),
     ),
@@ -253,7 +253,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "T_self", "H_stable", "Tension_RSI",
         ),
         description=(
-            "Tracks invariant drift under recursive self-modification — maps to "
+            "Tracks invariant drift under recursive self-modification - maps to "
             "GovernanceKernel state invariant checks and reset semantics."
         ),
     ),
@@ -276,7 +276,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "Tension_data_truth",
         ),
         description=(
-            "Measures tension between synthetic data quality and ground truth — "
+            "Measures tension between synthetic data quality and ground truth - "
             "maps to SignalExtractor trust and MetricsCollector data quality."
         ),
     ),
@@ -299,7 +299,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_consciousness", "Tension_consciousness",
         ),
         description=(
-            "Encodes cognitive tension thresholds for state integration — maps to "
+            "Encodes cognitive tension thresholds for state integration - maps to "
             "GovernanceKernel state observation and MetricsCollector introspection."
         ),
     ),
@@ -322,7 +322,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_energy", "Tension_energy",
         ),
         description=(
-            "Models energy budget constraints on computation — maps to "
+            "Models energy budget constraints on computation - maps to "
             "BehaviorBudget economics and SharedBudgetPool resource allocation."
         ),
     ),
@@ -345,7 +345,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_ood", "Tension_ood",
         ),
         description=(
-            "Measures consistency tension between in-distribution and OOD performance — "
+            "Measures consistency tension between in-distribution and OOD performance - "
             "maps to GovernanceKernel signal robustness and PolicyEngine evaluation."
         ),
     ),
@@ -368,7 +368,7 @@ PROBLEM_REGISTRY: Dict[str, ProblemEntry] = {
             "DeltaS_dissipation", "Tension_free_energy",
         ),
         description=(
-            "Encodes energy-entropy trade-offs in open systems — maps to "
+            "Encodes energy-entropy trade-offs in open systems - maps to "
             "GovernanceKernel budget/tension dynamics and BehaviorBudget decay."
         ),
     ),

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q125: Multi-Agent AI Dynamics — Incentive Tension.
+Test EH-Q125: Multi-Agent AI Dynamics - Incentive Tension.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -12,10 +12,10 @@ from governance.coordination import (
 
 
 class TestQ125MultiAgent:
-    """Q125: Multi-agent dynamics — incentive tension in swarms."""
+    """Q125: Multi-agent dynamics - incentive tension in swarms."""
 
     def test_cooperative_allocation(self):
-        """World T: Fair resource allocation — low tension."""
+        """World T: Fair resource allocation - low tension."""
         pool = SharedBudgetPool(total_effort=10.0, total_risk=5.0, max_per_agent_effort=2.0, max_per_agent_risk=1.0)
         for i in range(5):
             success = pool.allocate(f"coop_{i}", effort=1.5, risk=0.8)

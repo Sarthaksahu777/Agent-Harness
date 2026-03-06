@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q131: Tension Free Energy — Budget as Thermodynamic Analog.
+Test EH-Q131: Tension Free Energy - Budget as Thermodynamic Analog.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -10,7 +10,7 @@ from governance import GovernanceAgent, step, Signals
 
 
 class TestQ131TensionFreeEnergy:
-    """Q131: Tension free energy — budget economics as thermodynamics."""
+    """Q131: Tension free energy - budget economics as thermodynamics."""
 
     def test_low_dissipation(self):
         """World T: Low-tension work preserves free energy (budget)."""
@@ -36,7 +36,7 @@ class TestQ131TensionFreeEnergy:
         assert r_lo.budget.effort > r_hi.budget.effort
 
     def test_equilibrium_halt(self):
-        """Equilibrium: Maximum entropy → halt (thermodynamic death)."""
+        """Equilibrium: Maximum entropy  halt (thermodynamic death)."""
         agent = GovernanceAgent()
         for _ in range(200):
             r = step(agent, Signals(reward=0.0, novelty=1.0, urgency=1.0))

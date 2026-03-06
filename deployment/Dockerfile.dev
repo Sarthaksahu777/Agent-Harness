@@ -1,4 +1,4 @@
-# Dockerfile.dev — Development container for Agent Harness
+# Dockerfile.dev - Development container for Agent Harness
 # Includes dev dependencies and hot-reload support
 
 FROM python:3.11-slim

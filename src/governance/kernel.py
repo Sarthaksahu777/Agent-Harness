@@ -20,7 +20,7 @@ There is NO auto-recovery from HALTED. The session must be restarted
 to resume operation. This is a safety invariant, not a limitation.
 
 Invariants:
-- Deterministic: same inputs → same outputs
+- Deterministic: same inputs  same outputs
 - Fail-closed: halt is terminal
 - Bounded: execution limits are enforced
 """
@@ -175,7 +175,7 @@ class GovernanceKernel:
         stagnating = self.no_progress_steps >= self.profile.stagnation_window
 
         # --------------------------------------------------
-        # 2. Signal Evaluation → Control state accumulation
+        # 2. Signal Evaluation  Control state accumulation
         # --------------------------------------------------
         delta = self.evaluator.compute(
             reward=effective_reward,
@@ -187,7 +187,7 @@ class GovernanceKernel:
         self.state = self.state.integrate(delta)
 
         # --------------------------------------------------
-        # 3. Budget Computation → Raw behavior budget (stateless)
+        # 3. Budget Computation  Raw behavior budget (stateless)
         # --------------------------------------------------
         raw_budget = self.budget_computer.compute(
             state=self.state,
@@ -197,7 +197,7 @@ class GovernanceKernel:
 
         # --------------------------------------------------
         # 4. Budget Inertia (smoothing across steps)
-        #    new_budget = α * previous + (1 - α) * raw
+        #    new_budget =  * previous + (1 - ) * raw
         #    This is control stability, NOT learning.
         # --------------------------------------------------
         alpha = self.BUDGET_INERTIA_ALPHA
@@ -234,7 +234,7 @@ class GovernanceKernel:
         # --------------------------------------------------
         # 7. Recovery (ONLY when mode == RECOVERING)
         #    INVARIANT: Recovery occurs ONLY in RECOVERING mode.
-        #    INVARIANT: Recovered budget ≤ last stable (non-RECOVERING) budget.
+        #    INVARIANT: Recovered budget  last stable (non-RECOVERING) budget.
         # --------------------------------------------------
         # Recovery semantics:
         # - Recovery occurs only in RECOVERING mode

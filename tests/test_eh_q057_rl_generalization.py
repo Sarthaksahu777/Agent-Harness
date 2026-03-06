@@ -3,8 +3,8 @@
 Test EH-Q057: RL Generalization and Out-of-Distribution Robustness
 
 Maps BlackHole Q057 tension encoding to Agent Harness governance:
-- consistency_tension → budget decay under novel signals
-- Perf_train vs Perf_deploy → reward signals in-distribution vs shifted
+- consistency_tension  budget decay under novel signals
+- Perf_train vs Perf_deploy  reward signals in-distribution vs shifted
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -14,7 +14,7 @@ from governance import GovernanceAgent, step, Signals
 
 
 class TestQ057RLGeneralization:
-    """Q057: RL generalization — consistency tension under distribution shift."""
+    """Q057: RL generalization - consistency tension under distribution shift."""
 
     def test_low_tension_in_distribution(self):
         """World T: Agent performs well within training distribution."""
@@ -24,7 +24,7 @@ class TestQ057RLGeneralization:
         assert not result.halted
 
     def test_high_tension_out_of_distribution(self):
-        """World F: Agent faces OOD deployment — high consistency tension."""
+        """World F: Agent faces OOD deployment - high consistency tension."""
         agent = GovernanceAgent()
         for _ in range(50):
             # Low trust accelerates decay
@@ -42,7 +42,7 @@ class TestQ057RLGeneralization:
         assert gap > 0, f"Generalization gap should be positive, got {gap}"
 
     def test_tension_increases_with_capability_mismatch(self):
-        """DeltaS_cap: Higher mismatch → lower remaining budget."""
+        """DeltaS_cap: Higher mismatch  lower remaining budget."""
         agent_a = GovernanceAgent()
         agent_b = GovernanceAgent()
         for _ in range(15):

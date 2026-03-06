@@ -21,7 +21,7 @@ Assumptions:
 - W and V matrices are fixed
 
 Invariants:
-- Deterministic: same inputs → same outputs
+- Deterministic: same inputs  same outputs
 - Stateless: no internal mutable state
 - Pure: no side effects
 """
@@ -44,13 +44,13 @@ class GovernanceEngine:
     
     Where:
     - s is the control state vector [control_margin, control_loss, exploration_pressure, urgency_level, risk]
-    - W is the enabling matrix (positive state → positive budget)
+    - W is the enabling matrix (positive state  positive budget)
     - V is the suppressive matrix (control_loss suppresses all dimensions)
     - g is the raw governance output [effort, risk, exploration, persistence]
     
     This is NOT learning. The matrices are fixed.
     This is NOT optimization. The computation is deterministic.
-    This is pure governance: state → permission.
+    This is pure governance: state  permission.
     
     Boundary clarification:
     - Engine DETECTS stagnation and passes flag to governance
@@ -64,7 +64,7 @@ class GovernanceEngine:
     - Returns BehaviorBudget with values in [0.0, 1.0]
     """
     
-    # Enabling matrix (control state → governance)
+    # Enabling matrix (control state  governance)
     # Rows: control state axes (control_margin, control_loss, exploration_pressure, urgency_level, risk)
     # Cols: budget dimensions (effort, risk, exploration, persistence)
     W = np.array([
@@ -102,7 +102,7 @@ class GovernanceEngine:
             
         Invariants:
         - Pure function (no side effects)
-        - Deterministic (same inputs → same outputs)
+        - Deterministic (same inputs  same outputs)
         """
         s = np.array([
             state.control_margin,

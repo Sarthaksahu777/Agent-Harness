@@ -29,7 +29,7 @@ import time
 
 # Add src to path if running as script
 if __name__ == "__main__":
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 try:
     from rich.console import Console
@@ -55,8 +55,8 @@ def create_bar(value: float, width: int = 20, filled: str = None, empty: str = N
     # Use ASCII-safe characters on Windows to avoid encoding issues
     if filled is None:
         try:
-            # Test if we can encode Unicode
-            "█░".encode(sys.stdout.encoding or 'utf-8')
+            # Test if we can encode a sample Unicode block
+            "█".encode(sys.stdout.encoding or 'utf-8')
             filled, empty = "█", "░"
         except (UnicodeEncodeError, LookupError):
             filled, empty = "#", "-"
@@ -70,9 +70,10 @@ def create_sparkline(values: List[float], width: int = 30) -> str:
     """Create an ASCII sparkline graph."""
     # Use ASCII-safe characters on Windows
     try:
-        "─▁▂▃▄▅▆▇█".encode(sys.stdout.encoding or 'utf-8')
-        empty_char = "─"
-        chars = " ▁▂▃▄▅▆▇█"
+        # Test if we can encode a sample sparkline block
+        "▃".encode(sys.stdout.encoding or 'utf-8')
+        empty_char = " "
+        chars = " ▂▃▄▅▆▇█"
     except (UnicodeEncodeError, LookupError):
         empty_char = "-"
         chars = " _.,-~=+#"
@@ -124,33 +125,62 @@ class GovernanceVisualizer:
         effort_history = [h.effort for h in self.history]
         risk_history = [h.risk for h in self.history]
         
-        lines = [
-            "┌" + "─" * 70 + "┐",
-            "│" + " Agent Harness Governance Dashboard ".center(70) + "│",
-            "├" + "─" * 70 + "┤",
-            f"│ Step: {m.step:<6}  Mode: {m.mode:<12}  Halted: {str(m.halted):<6}".ljust(71) + "│",
-            "├" + "─" * 70 + "┤",
-            "│ BUDGET".ljust(71) + "│",
-            f"│   Effort      {create_bar(m.effort)}  {m.effort:.2f}".ljust(71) + "│",
-            f"│   Risk        {create_bar(m.risk)}  {m.risk:.2f}".ljust(71) + "│",
-            f"│   Exploration {create_bar(m.exploration)}  {m.exploration:.2f}".ljust(71) + "│",
-            f"│   Persistence {create_bar(m.persistence)}  {m.persistence:.2f}".ljust(71) + "│",
-            "├" + "─" * 70 + "┤",
-            "│ CONTROL STATE".ljust(71) + "│",
-            f"│   Margin: {m.control_margin:+.2f}  Loss: {m.control_loss:.2f}  Pressure: {m.exploration_pressure:.2f}  Urgency: {m.urgency_level:.2f}".ljust(71) + "│",
-            "├" + "─" * 70 + "┤",
-            "│ SIGNALS (Last Input)".ljust(71) + "│",
-            f"│   Reward: {m.reward:.2f}  Novelty: {m.novelty:.2f}  Urgency: {m.urgency:.2f}  Difficulty: {m.difficulty:.2f}  Trust: {m.trust:.2f}".ljust(71) + "│",
-            "├" + "─" * 70 + "┤",
-            "│ EFFORT TREND".ljust(71) + "│",
-            f"│   {create_sparkline(effort_history, 60)}".ljust(71) + "│",
-            "│ RISK TREND".ljust(71) + "│",
-            f"│   {create_sparkline(risk_history, 60)}".ljust(71) + "│",
-            "└" + "─" * 70 + "┘",
-        ]
+        try:
+             # Test if we can encode box characters
+             "┌".encode(sys.stdout.encoding or 'utf-8')
+             lines = [
+                "┌" + "─" * 70 + "┐",
+                "│" + " Agent Harness Governance Dashboard ".center(70) + "│",
+                "├" + "─" * 70 + "┤",
+                f"│ Step: {m.step:<6}  Mode: {m.mode:<12}  Halted: {str(m.halted):<6}".ljust(71) + "│",
+                "├" + "─" * 70 + "┤",
+                "│ BUDGET".ljust(71) + "│",
+                f"│   Effort      {create_bar(m.effort)}  {m.effort:.2f}".ljust(71) + "│",
+                f"│   Risk        {create_bar(m.risk)}  {m.risk:.2f}".ljust(71) + "│",
+                f"│   Exploration {create_bar(m.exploration)}  {m.exploration:.2f}".ljust(71) + "│",
+                f"│   Persistence {create_bar(m.persistence)}  {m.persistence:.2f}".ljust(71) + "│",
+                "├" + "─" * 70 + "┤",
+                "│ CONTROL STATE".ljust(71) + "│",
+                f"│   Margin: {m.control_margin:+.2f}  Loss: {m.control_loss:.2f}  Pressure: {m.exploration_pressure:.2f}  Urgency: {m.urgency_level:.2f}  Risk: {m.state_risk:.2f}".ljust(71) + "│",
+                "├" + "─" * 70 + "┤",
+                "│ SIGNALS (Last Input)".ljust(71) + "│",
+                f"│   Reward: {m.reward:.2f}  Novelty: {m.novelty:.2f}  Urgency: {m.urgency:.2f}  Difficulty: {m.difficulty:.2f}  Trust: {m.trust:.2f}".ljust(71) + "│",
+                "├" + "─" * 70 + "┤",
+                "│ EFFORT TREND".ljust(71) + "│",
+                f"│   {create_sparkline(effort_history, 60)}".ljust(71) + "│",
+                "│ RISK TREND".ljust(71) + "│",
+                f"│   {create_sparkline(risk_history, 60)}".ljust(71) + "│",
+                "└" + "─" * 70 + "┘",
+            ]
+        except (UnicodeEncodeError, LookupError):
+            # Pure ASCII fallback for simple render
+            lines = [
+                "+" + "-" * 70 + "+",
+                "|" + " Agent Harness Governance Dashboard ".center(70) + "|",
+                "+" + "-" * 70 + "+",
+                f"| Step: {m.step:<6}  Mode: {m.mode:<12}  Halted: {str(m.halted):<6}".ljust(71) + "|",
+                "+" + "-" * 70 + "+",
+                "| BUDGET".ljust(71) + "|",
+                f"|   Effort      {create_bar(m.effort)}  {m.effort:.2f}".ljust(71) + "|",
+                f"|   Risk        {create_bar(m.risk)}  {m.risk:.2f}".ljust(71) + "|",
+                f"|   Exploration {create_bar(m.exploration)}  {m.exploration:.2f}".ljust(71) + "|",
+                f"|   Persistence {create_bar(m.persistence)}  {m.persistence:.2f}".ljust(71) + "|",
+                "+" + "-" * 70 + "+",
+                "| CONTROL STATE".ljust(71) + "|",
+                f"|   Margin: {m.control_margin:+.2f}  Loss: {m.control_loss:.2f}  Pressure: {m.exploration_pressure:.2f}  Urgency: {m.urgency_level:.2f}  Risk: {m.state_risk:.2f}".ljust(71) + "|",
+                "+" + "-" * 70 + "+",
+                "| SIGNALS (Last Input)".ljust(71) + "|",
+                f"|   Reward: {m.reward:.2f}  Novelty: {m.novelty:.2f}  Urgency: {m.urgency:.2f}  Difficulty: {m.difficulty:.2f}  Trust: {m.trust:.2f}".ljust(71) + "|",
+                "+" + "-" * 70 + "+",
+                "| EFFORT TREND".ljust(71) + "|",
+                f"|   {create_sparkline(effort_history, 60)}".ljust(71) + "|",
+                "| RISK TREND".ljust(71) + "|",
+                f"|   {create_sparkline(risk_history, 60)}".ljust(71) + "|",
+                "+" + "-" * 70 + "+",
+            ]
         
         if m.halted and m.failure_type:
-            lines.insert(-1, f"│ ! HALTED: {m.failure_type} - {m.failure_reason or 'No reason'}".ljust(71) + "│")
+            lines.insert(-1, f" ! HALTED: {m.failure_type} - {m.failure_reason or 'No reason'}".ljust(71) + "")
         
         return "\n".join(lines)
     
@@ -200,7 +230,8 @@ class GovernanceVisualizer:
         state_line.append(f"  Margin: {m.control_margin:+.2f}  ", style="cyan")
         state_line.append(f"Loss: {m.control_loss:.2f}  ", style="red")
         state_line.append(f"Pressure: {m.exploration_pressure:.2f}  ", style="green")
-        state_line.append(f"Urgency: {m.urgency_level:.2f}", style="yellow")
+        state_line.append(f"Urgency: {m.urgency_level:.2f}  ", style="yellow")
+        state_line.append(f"Risk: {m.state_risk:.2f}", style="red")
         content.append(state_line)
         content.append("")
         
@@ -266,16 +297,24 @@ def run_demo():
     try:
         for i in range(100):
             # Generate random signals (with some patterns)
-            reward = random.uniform(0.0, 0.4) + (0.3 if i % 10 < 5 else 0.0)
-            novelty = random.uniform(0.0, 0.3)
-            urgency = min(1.0, 0.1 + (i * 0.01))  # Gradually increasing
-            difficulty = random.uniform(0.0, 0.3) + (0.4 if i > 70 else 0.0)  # Spike late
+            if i < 15:
+                # Initial "Crisis" phase to show risk
+                reward = random.uniform(0.0, 0.1)
+                novelty = random.uniform(0.5, 0.8)
+                urgency = random.uniform(0.6, 0.9)
+                difficulty = random.uniform(0.6, 1.0)
+            else:
+                # Recovery/Normal phase
+                reward = random.uniform(0.2, 0.5)
+                novelty = random.uniform(0.1, 0.3)
+                urgency = random.uniform(0.2, 0.4)
+                difficulty = random.uniform(0.1, 0.2)
             
             signals = Signals(
                 reward=reward,
                 novelty=novelty,
                 urgency=urgency,
-                difficulty=difficulty,
+                difficulty=difficulty + (random.uniform(0.1, 0.4) if i > 5 else 0.0),
                 trust=1.0,
             )
             

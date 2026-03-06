@@ -1,4 +1,4 @@
-# event_horizon_problems — Selected BlackHole S-class problems for Agent Harness testing
+# event_horizon_problems - Selected BlackHole S-class problems for Agent Harness testing
 """
 Event Horizon Problems: A curated subset of 16 BlackHole S-class problems
 that map directly to Agent Harness governance components.

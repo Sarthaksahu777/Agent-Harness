@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q105: Systemic Crash Prediction — Risk Tail Tension.
+Test EH-Q105: Systemic Crash Prediction - Risk Tail Tension.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -11,10 +11,10 @@ from governance.coordination import CascadeDetector
 
 
 class TestQ105SystemicCrashes:
-    """Q105: Systemic crash prediction — risk_tail_tension."""
+    """Q105: Systemic crash prediction - risk_tail_tension."""
 
     def test_low_tension_stable(self):
-        """World T: Stable system with bounded risk — no crash."""
+        """World T: Stable system with bounded risk - no crash."""
         agent = GovernanceAgent()
         for _ in range(10):
             result = step(agent, Signals(reward=0.7, novelty=0.3, urgency=0.2))

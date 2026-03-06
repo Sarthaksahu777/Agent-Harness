@@ -18,7 +18,7 @@ Assumptions:
 - Deltas are additive (integrated via ControlState.integrate())
 
 Invariants:
-- Deterministic: same inputs → same outputs
+- Deterministic: same inputs  same outputs
 - Pure: no side effects
 - Stateless: no internal state
 """
@@ -75,7 +75,6 @@ class SignalEvaluator:
             "control_loss": (0.0 if p_effective > 0 else d * 0.4) + (u * 0.2),
             "exploration_pressure": (n_effective * 0.5) - ((1.0 - n_effective) * 0.2),
             "urgency_level": u * 0.6,
-            "risk": -abs(p_effective) * 0.3,
         }
         return deltas
 

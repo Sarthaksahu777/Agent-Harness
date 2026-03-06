@@ -357,10 +357,10 @@ def main():
         is_valid, error = HashChainedAuditLogger.verify_chain(filepath)
         
         if is_valid:
-            print("✓ Chain verified: OK")
+            print(" Chain verified: OK")
             sys.exit(0)
         else:
-            print(f"✗ Chain verification FAILED: {error}")
+            print(f" Chain verification FAILED: {error}")
             sys.exit(1)
     
     else:

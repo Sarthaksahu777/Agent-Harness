@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test EH-Q124: Scalable Oversight — Guardrail Coverage.
+Test EH-Q124: Scalable Oversight - Guardrail Coverage.
 """
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -14,10 +14,10 @@ from governance import (
 
 
 class TestQ124Oversight:
-    """Q124: Scalable oversight — detection coverage."""
+    """Q124: Scalable oversight - detection coverage."""
 
     def test_full_coverage_stack(self):
-        """World T: All guardrails active — full coverage."""
+        """World T: All guardrails active - full coverage."""
         stack = GuardrailStack()
         stack.add(PromptInjectionDetector())
         stack.add(PIIDetector())
