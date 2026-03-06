@@ -72,7 +72,7 @@ class GovernanceEngine:
         [0.0, 0.0, 0.0, 0.0],  # control_loss (no enabling)
         [0.2, 0.1, 0.7, 0.1],  # exploration_pressure
         [0.3, 0.2, 0.1, 0.2],  # urgency_level
-        [0.1, 0.5, 0.3, 0.1],  # risk
+        [0.0, 0.5, 0.3, 0.1],  # risk
     ])
 
     # Suppressive matrix (only control_loss suppresses)
@@ -82,7 +82,7 @@ class GovernanceEngine:
         [0.7, 0.9, 0.9, 0.8],  # control_loss suppresses all
         [0.0, 0.0, 0.0, 0.0],  # exploration_pressure
         [0.0, 0.0, 0.0, 0.0],  # urgency_level
-        [0.0, 0.0, 0.0, 0.0],  # risk
+        [3.0, 0.0, 0.0, 0.0],  # risk suppresses effort
     ])
 
     def __init__(self, profile=None):

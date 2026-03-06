@@ -185,6 +185,19 @@ class GovernanceKernel:
             trust=trust,
         )
         self.state = self.state.integrate(delta)
+        
+        # --------------------------------------------------
+        # 2.5 Safety State Clipping (Non-negative)
+        #     INVARIANT: Safety metrics (loss, risk) cannot be negative.
+        #     Prevents "safety credit" from masking current threats.
+        # --------------------------------------------------
+        self.state = ControlState(
+            control_margin=self.state.control_margin,
+            control_loss=max(0.0, self.state.control_loss),
+            exploration_pressure=self.state.exploration_pressure,
+            urgency_level=self.state.urgency_level,
+            risk=max(0.0, self.state.risk),
+        )
 
         # --------------------------------------------------
         # 3. Budget Computation  Raw behavior budget (stateless)

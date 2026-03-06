@@ -71,10 +71,11 @@ class SignalEvaluator:
         n_effective = n * t
         
         deltas = {
-            "control_margin": (p_effective * 0.3) - (d * 0.1),
+            "control_margin": ((p_effective - 0.10) * 0.3) - (d * 0.1),
             "control_loss": (0.0 if p_effective > 0 else d * 0.4) + (u * 0.2),
             "exploration_pressure": (n_effective * 0.5) - ((1.0 - n_effective) * 0.2),
             "urgency_level": u * 0.6,
+            "risk": (d * 0.4) + (n_effective * 0.2) + (u * 0.1) - (p_effective * 0.3),
         }
         return deltas
 
