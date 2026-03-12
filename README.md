@@ -9,7 +9,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![CI Tests](https://img.shields.io/badge/build-passing-brightgreen?style=flat-square)](#)
 [![GitHub Stars](https://img.shields.io/github/stars/Sarthaksahu777/Agent-Harness?style=flat-square)](https://github.com/Sarthaksahu777/Agent-Harness)
-[![Downloads](https://img.shields.io/pypi/dm/agentharnessengine?style=flat-square)](https://pypi.org/project/agentharnessengine/)
+[![Total Downloads](https://static.pepy.tech/personalized-badge/agentharnessengine?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=Total%20Downloads)](https://pepy.tech/projects/agentharnessengine)
+[![Monthly Downloads](https://static.pepy.tech/personalized-badge/agentharnessengine?period=month&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=BLUE&left_text=Monthly%20Downloads)](https://pepy.tech/projects/agentharnessengine)
 
 *A deterministic runtime governance engine that enforces bounded, auditable execution for autonomous AI agents.*
 
