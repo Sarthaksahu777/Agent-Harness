@@ -91,3 +91,29 @@ We reaffirm the core distinction:
 -   **Agent Harness (Outside):** Enforces hard boundaries, budgets, and audit trails.
 
 The **Diagnostic Overlay** allows the "Outside" to understand the "Inside" without breaking the isolation guarantee.
+
+---
+
+## 4. The Governance Hypervisor (V2.0 Architecture)
+
+**Objective:** Move from "Process-Level" enforcement to "Kernel-Level" isolation.
+
+### The eBPF Firewall
+We are researching the use of **eBPF (Extended Berkeley Packet Filter)** to intercept agent-triggered syscalls at the Linux kernel level. This provides a "True Governance" boundary where an agent cannot bypass the harness even if it compromises the Python runtime.
+
+### Transactional State Rollbacks
+To handle catastrophic failures, we are designing a rollback mechanism using **Copy-on-Write (CoW)** filesystems or disposable container snapshots. If the Harness halts an agent due to safety violations, the environment is instantly reverted to a "Clean State," undoing any accidental damage.
+
+See the full [Architecture Vision](TRUE_GOVERNANCE_ARCHITECTURE.md).
+
+---
+
+## 5. Mechanical Signal Enforcement
+
+**Objective:** Eliminate "Reasoning Bias" in governance signals.
+
+By using **Mechanical Signal Extraction**, the Harness computes `Reward`, `Novelty`, and `Difficulty` based purely on physical telemetry (byte deltas, SHA-256 hashes, exit codes) rather than LLM-generated summaries. 
+
+This creates an unforgeable governance loop where an AI cannot "convince" the governor of progress it hasn't physically made.
+
+See the [Mechanical Extraction Guide](MECHANICAL_EXTRACTION.md).

@@ -33,14 +33,6 @@
 
 ---
 
-## 🌟 New in v1.2.0
-
-- **WFGY Benchmarks**: Standalone Python scripts for stress-testing agents ([F1](examples/bench_wfgy_f1_hallucinated_grounding.py), [F4](examples/bench_wfgy_f4_cascading_deadlock.py), [F6](examples/bench_wfgy_f6_creeping_overshoot.py)).
-- **Hash-Chained Audit Logs**: Cryptographically linked decision traces for immutable history.
-- **Enterprise Metrics**: Prometheus exporter for budget drain rates and halt telemetry.
-
----
-
 ## 🛑 Motivation / Problem Statement
 
 Autonomous agents rely on "soft" boundaries (prompt engineering, RLHF). Under sustained failure or adversarial conditions, agents ignore these and enter unbounded loops. Agent-Harness replaces soft boundaries with a **runtime execution firewall** that dynamically tracks Effort, Exploration, and Risk. Once budgets deplete, permission to execute *always collapses*.
@@ -397,6 +389,8 @@ The Agent-Harness roadmap focuses on broadening the scope of autonomous safety. 
 - **OS-Level Isolation**: Exploring [eBPF and Kernel-level enforcement](docs/TRUE_GOVERNANCE_ARCHITECTURE.md) to move security boundaries outside the application runtime.
 - **Mechanical Signal Extraction**: Researching [reasoning-free telemetry](docs/MECHANICAL_EXTRACTION.md) to eliminate evaluation bias.
 - **Policy & Swarms**: Enhancing multi-agent coordination and decentralized budget pooling.
+- **LLM-assisted Semantic Guardrails**: Moving beyond regex into fast, quantized models evaluating signal context natively.
+- **Dynamic Threshold Selection**: Automatically pivoting between `CONSERVATIVE` and `AGGRESSIVE` profiles based on historical session hashes.
 
 For a full list of documentation and research papers, see the [Master Index](docs/MASTER_INDEX.md).
 

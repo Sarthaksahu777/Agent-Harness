@@ -77,5 +77,13 @@ The following critical features have been implemented in v1.2:
 
 ---
 
-*Status: V1.2 Released. Core Engine stable. Focus shifting to V2.0 Compliance features.*
+## V2.1 Distributed Governance Swarms (PLANNING)
+
+**Objective:** Peer-to-peer governor synchronization.
+- [ ] **Gossip Protocol**: Allow governors to share "Blacklist Hashes" of failed trajectories in real-time.
+- [ ] **Distributed Budgets**: Enforce global limits across a cluster of independent agent nodes.
+
+---
+
+*Status: V1.2 (WFGY Baseline) fully deployed. Research shifting to V2.0 Hypervisor implementation.*
 
