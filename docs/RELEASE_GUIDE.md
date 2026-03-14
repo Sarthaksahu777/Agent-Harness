@@ -14,9 +14,9 @@ This guide outlines the process for updating the version and publishing **Agent-
 ## Step-by-Step Release Process
 
 ### 1. Update Version Numbers
-Update the version string to `v1.1.0` (or the next version) in the following files:
-- `pyproject.toml`: `version = "1.1.0"`
-- `src/governance/__init__.py`: `__version__ = "1.1.0"`
+Update the version string to `v1.2.0` (or the next version) in the following files:
+- `pyproject.toml`: `version = "1.2.0"`
+- `src/governance/__init__.py`: `__version__ = "1.2.0"`
 
 ### 2. Clean Previous Builds
 Delete the `dist/` and `build/` directories if they exist:

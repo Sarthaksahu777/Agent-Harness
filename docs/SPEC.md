@@ -167,10 +167,10 @@ This is what makes the system real.
 
 Enforcement levels:
 1.  **In-Process** (PoC, bypassable)
-2.  **HTTP Proxy** (production-grade) ✓ *Implemented in v1.0*
+2.  **HTTP Proxy** (production-grade) ✓ *Implemented in v1.2*
 3.  **Sidecar / Network Boundary** (infra-grade, unbypassable)
 
-V1.0 Features:
+V1.2 Features:
 - FastAPI-based HTTP proxy with fail-closed middleware
 - Returns 403 Forbidden on any halt or error
 - Prometheus metrics at `/metrics` endpoint

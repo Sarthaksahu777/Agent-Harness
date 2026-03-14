@@ -2,7 +2,7 @@
 """
 Temporal signal processors.
 
-NOTE: StagnationDetector is NOT used in the v0.5 base prototype.
+NOTE: StagnationDetector was introduced in v1.1 and is baseline in v1.2.
 
 The base prototype uses GovernanceEngine-level stagnation detection via:
 - GovernanceEngine.no_progress_steps counter

@@ -3,7 +3,7 @@
 This document identifies the current state of the **Agent-Harness** (EmoCore) repository, distinguishing between what is fully implemented, what is "partially deployed" (implemented but not integrated), and what is truly "not implemented" (roadmap/future plans).
 
 ## 🟢 1. Fully Implemented (Core Foundation)
-The following components are stable and ready for use as defined in the V1.1 specification:
+The following components are stable and ready for use as defined in the V1.2 specification:
 
 - **Governance Kernel**: Core state machine for Effort/Risk/Persistence/Exploration.
 - **In-Process Enforcer**: `@governed` decorator for Python function instrumentation.

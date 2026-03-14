@@ -649,7 +649,7 @@ To satisfy your spec's **5 litmus test criteria**, you need:
 
 **Test:** Can an agent be prevented from exceeding limits?
 
-### Week 3-4: Enforcement Upgrade COMPLETE (v1.0)
+### Week 3-4: Enforcement Upgrade COMPLETE (v1.2)
 ```
  6. HTTP proxy enforcer (FastAPI)
  7. Integration with LangChain/AutoGen
@@ -671,9 +671,9 @@ To satisfy your spec's **5 litmus test criteria**, you need:
 
 ---
 
-## V1.0 Hardening Reference
+## V1.2 Hardening Reference
 
-New modules added in v1.0:
+New modules added in v1.2:
 
 | Module | Purpose |
 |:---|:---|

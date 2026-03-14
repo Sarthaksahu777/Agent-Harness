@@ -6,7 +6,7 @@ This roadmap focuses on transforming the **Governance Engine** into a non-bypass
 
 ## V1 Hardening (COMPLETED)
 
-The following critical features have been implemented in v1.0:
+The following critical features have been implemented in v1.2:
 
 ### 1. HTTP Proxy Enforcer [Done]
 **Objective:** Move enforcement from the agent's process to the network boundary.
@@ -41,7 +41,7 @@ The following critical features have been implemented in v1.0:
 
 ---
 
-## V1.1 Multi-Agent Core (COMPLETED)
+## V1.2 Multi-Agent Core (COMPLETED)
 
 **Objective:** Govern agent swarms and automate signal tracking.
 
@@ -77,5 +77,5 @@ The following critical features have been implemented in v1.0:
 
 ---
 
-*Status: V1.1 Released. Core Engine stable. Focus shifting to V2.0 Compliance features.*
+*Status: V1.2 Released. Core Engine stable. Focus shifting to V2.0 Compliance features.*
 
